@@ -4,7 +4,6 @@ go:
  - 1.4
  - 1.6
  - release
- - tip
 script:
 - go test -v ./...
 notifications:
