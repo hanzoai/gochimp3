@@ -1,5 +1,5 @@
 # Credits
-- v1.0
+- Authors
     * [Ryan Neal](https://github.com/rybit)
     * [Zach Kelling](https://github.com/zeekay)
 
