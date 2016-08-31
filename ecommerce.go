@@ -234,9 +234,9 @@ type Order struct {
 	TaxTotal           float64   `json:"tax_total,omitempty"`
 	ShippingTotal      float64   `json:"shipping_total,omitempty"`
 	TrackingCode       string    `json:"tracking_code,omitempty"`
-	ProcessedAtForeign time.Time `json:processed_at_foreign`
-	CancelledAtForeign time.Time `json:cancelled_at_foreign`
-	UpdatedAtForeign   time.Time `json:updated_at_foreign`
+	ProcessedAtForeign time.Time `json:"processed_at_foreign"`
+	CancelledAtForeign time.Time `json:"cancelled_at_foreign"`
+	UpdatedAtForeign   time.Time `json:"updated_at_foreign"`
 	CampaignID         string    `json:"campaign_id,omitempty"`
 	FinancialStatus    string    `json:"financial_status,omitempty"`
 	FulfillmentStatus  string    `json:"fulfillment_status,omitempty"`
