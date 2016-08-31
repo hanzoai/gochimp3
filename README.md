@@ -1,5 +1,5 @@
 # gochimp3
-[![GoDoc][godoc-img][godoc-url] [![Build Status][travis-img]][travis-url] [![Gitter chat][gitter-img]][gitter-url]
+[![GoDoc][godoc-img]][godoc-url] [![Build Status][travis-img]][travis-url] [![Gitter chat][gitter-img]][gitter-url]
 
 ## Introduction
 Golang client for [MailChimp API 3.0](http://developer.mailchimp.com/documentation/mailchimp/).
