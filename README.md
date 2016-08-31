@@ -51,7 +51,7 @@ func main() {
 }
 ```
 
-[godoc-img]:      https://godoc.org/github.com/zeekay/gochimp3?status.svg)
+[godoc-img]:      https://godoc.org/github.com/zeekay/gochimp3?status.svg
 [godoc-url]:      https://godoc.org/github.com/zeekay/gochimp3
 [travis-img]:     https://img.shields.io/travis/zeekay/gochimp3.svg
 [travis-url]:     https://travis-ci.org/zeekay/gochimp3
