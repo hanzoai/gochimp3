@@ -327,13 +327,13 @@ type Product struct {
 	Variants []Variant `json:"variants"`
 
 	// Optional
-	Handle      string `json:"handle,omitempty"`
-	URL         string `json:"url,omitempty"`
-	Description string `json:"description,omitempty"`
-	Type        string `json:"type,omitempty"`
-	Vendor      string `json:"vendor,omitempty"`
-	ImageURL    string `json:"image_url,omitempty"`
-	PublishedAt string `json:"published_at_foreign,omitempty"`
+	Handle      string    `json:"handle,omitempty"`
+	URL         string    `json:"url,omitempty"`
+	Description string    `json:"description,omitempty"`
+	Type        string    `json:"type,omitempty"`
+	Vendor      string    `json:"vendor,omitempty"`
+	ImageURL    string    `json:"image_url,omitempty"`
+	PublishedAt time.Time `json:"published_at_foreign,omitempty"`
 
 	// Response only
 	Links []Link `json:"_links,omitempty"`
