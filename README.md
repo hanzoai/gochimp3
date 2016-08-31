@@ -23,17 +23,14 @@ import (
 )
 
 const (
-    // Fake Mailchimp API key
     apiKey = "f6f6eb412g2b9677b00550d14d86db5e-us4"
-    // Fake List id
-    listId = "28ac3d7aa5"
 )
 
 func main() {
     client := gochimp3.New(apiKey)
 
     // Fetch list
-	list, err := client.GetList(listId, nil)
+	list, err := client.GetList("28a3d7a5", nil)
 	if err != nil {
 		fmt.Println("Failed to get list '%s'", listId)
 		os.Exit(1)
@@ -41,7 +38,7 @@ func main() {
 
     // Add subscriber
     req := &gochimp3.MemberRequest{
-        EmailAddress: "just@nobody.com"
+        EmailAddress: "spam@zeekay.io",
     }
 
 	if _, err := list.CreateMember(req); err != nil {
