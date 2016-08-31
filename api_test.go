@@ -30,7 +30,7 @@ func TestMain(m *testing.M) {
 }
 
 func testAPI() *API {
-	api := NewChimp("apikey", false)
+	api := New("apikey")
 	api.endpoint = testServer
 	api.Debug = true
 	return api
