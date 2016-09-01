@@ -30,7 +30,7 @@ type MemberRequest struct {
 	Interests    map[string]interface{} `json:"interests"`    // TODO undocumented
 	Language     string                 `json:"language"`
 	VIP          bool                   `json:"vip"`
-	Location     MemberLocation         `json:"location"`
+	Location     *MemberLocation        `json:"location"`
 }
 
 type Member struct {

@@ -39,14 +39,14 @@ type Store struct {
 	Name         string `json:"name"`
 
 	// Optional
-	Platform      string  `json:"platform,omitempty"`
-	Domain        string  `json:"domain,omitempty"`
-	EmailAddress  string  `json:"email_address,omitempty"`
-	MoneyFormat   string  `json:"money_format,omitempty"`
-	PrimaryLocale string  `json:"primary_locale,omitempty"`
-	Timezone      string  `json:"timezone,omitempty"`
-	Phone         string  `json:"phone,omitempty"`
-	Address       Address `json:"address,omitempty"`
+	Platform      string   `json:"platform,omitempty"`
+	Domain        string   `json:"domain,omitempty"`
+	EmailAddress  string   `json:"email_address,omitempty"`
+	MoneyFormat   string   `json:"money_format,omitempty"`
+	PrimaryLocale string   `json:"primary_locale,omitempty"`
+	Timezone      string   `json:"timezone,omitempty"`
+	Phone         string   `json:"phone,omitempty"`
+	Address       *Address `json:"address,omitempty"`
 
 	// Response
 	CreatedAt time.Time `json:"created_at,omitempty"`
@@ -241,8 +241,8 @@ type Order struct {
 	FinancialStatus    string    `json:"financial_status,omitempty"`
 	FulfillmentStatus  string    `json:"fulfillment_status,omitempty"`
 
-	BillingAddress  Address `json:"billing_address,omitempty"`
-	ShippingAddress Address `json:"shipping_address,omitempty"`
+	BillingAddress  *Address `json:"billing_address,omitempty"`
+	ShippingAddress *Address `json:"shipping_address,omitempty"`
 
 	// Response only
 	CreatedAt time.Time `json:"created_at,omitempty"`
