@@ -97,14 +97,14 @@ type Customer struct {
 	ID string `json:"id"`
 
 	// Optional
-	EmailAddress string  `json:"email_address,omitempty"`
-	OptInStatus  bool    `json:"opt_in_status,omitempty"`
-	Company      string  `json:"company,omitempty"`
-	FirstName    string  `json:"first_name,omitempty"`
-	LastName     string  `json:"last_name,omitempty"`
-	OrdersCount  int     `json:"orders_count,omitempty"`
-	TotalSpent   float64 `json:"total_spent,omitempty"`
-	Address      Address `json:"address,omitempty"`
+	EmailAddress string   `json:"email_address,omitempty"`
+	OptInStatus  bool     `json:"opt_in_status,omitempty"`
+	Company      string   `json:"company,omitempty"`
+	FirstName    string   `json:"first_name,omitempty"`
+	LastName     string   `json:"last_name,omitempty"`
+	OrdersCount  int      `json:"orders_count,omitempty"`
+	TotalSpent   float64  `json:"total_spent,omitempty"`
+	Address      *Address `json:"address,omitempty"`
 
 	// Response
 	CreatedAt string `json:"created_at,omitempty"`
