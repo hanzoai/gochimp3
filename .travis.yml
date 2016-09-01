@@ -2,8 +2,8 @@ sudo: false
 language: go
 go:
  - 1.4
- - 1.6
- - release
+ - 1.5
+ - tip
 script:
 - go test -v ./...
 notifications:
