@@ -3,7 +3,10 @@ package gochimp3
 import (
 	"encoding/json"
 	"strings"
-	"time"
+)
+
+const (
+	timeFormat = "2006-01-02T15:04:05-07:00"
 )
 
 func (address *Address) MarshalJSON() ([]byte, error) {
@@ -60,9 +63,9 @@ func (order *Order) MarshalJSON() ([]byte, error) {
 	}{
 		Order:              *order,
 		CurrencyCode:       strings.ToUpper(order.CurrencyCode),
-		ProcessedAtForeign: order.ProcessedAtForeign.Format(time.RFC3339),
-		CancelledAtForeign: order.CancelledAtForeign.Format(time.RFC3339),
-		UpdatedAtForeign:   order.UpdatedAtForeign.Format(time.RFC3339),
+		ProcessedAtForeign: order.ProcessedAtForeign.Format(timeFormat),
+		CancelledAtForeign: order.CancelledAtForeign.Format(timeFormat),
+		UpdatedAtForeign:   order.UpdatedAtForeign.Format(timeFormat),
 	}
 	return json.Marshal(tmp)
 }
@@ -73,7 +76,7 @@ func (product *Product) MarshalJSON() ([]byte, error) {
 		PublishedAtForeign string `json:"published_at_foreign"`
 	}{
 		Product:            *product,
-		PublishedAtForeign: product.PublishedAtForeign.Format(time.RFC3339),
+		PublishedAtForeign: product.PublishedAtForeign.Format(timeFormat),
 	}
 	return json.Marshal(tmp)
 }
