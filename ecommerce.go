@@ -10,6 +10,9 @@ const (
 	store_path  = "/ecommerce/stores/%s"
 	stores_path = "/ecommerce/stores"
 
+	customer_path  = "/ecommerce/stores/%s/customers/%s"
+	customers_path = "/ecommerce/stores/%s/customers"
+
 	cart_path  = "/ecommerce/stores/%s/carts/%s"
 	carts_path = "/ecommerce/stores/%s/carts"
 
@@ -111,6 +114,80 @@ func (api API) UpdateStore(req *Store) (*Store, error) {
 func (api API) DeleteStore(id string) (bool, error) {
 	endpoint := fmt.Sprintf(store_path, id)
 	return api.RequestOk("DELETE", endpoint)
+}
+
+// ------------------------------------------------------------------------------------------------
+// Customers
+// ------------------------------------------------------------------------------------------------
+
+type CustomerList struct {
+	APIError
+
+	Customers  []Customer `json:"customer"`
+	TotalItems int        `json:"total_items"`
+	Links      []Link     `json:"_links"`
+}
+
+func (store Store) GetCustomers(params *ExtendedQueryParams) (*CustomerList, error) {
+	response := new(CustomerList)
+
+	if store.HasError() {
+		return nil, fmt.Errorf("The store has an error, can't process request")
+	}
+	endpoint := fmt.Sprintf(customers_path, store.ID)
+	err := store.api.Request("GET", endpoint, params, nil, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (store Store) GetCustomer(id string, params *BasicQueryParams) (*Customer, error) {
+	response := new(Customer)
+
+	if store.HasError() {
+		return nil, fmt.Errorf("The store has an error, can't process request")
+	}
+
+	endpoint := fmt.Sprintf(customer_path, store.ID, id)
+	err := store.api.Request("GET", endpoint, params, nil, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (store Store) CreateCustomer(req *Customer) (*Customer, error) {
+	if err := store.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(customers_path, store.ID)
+	res := new(Customer)
+
+	return res, store.api.Request("POST", endpoint, nil, req, res)
+}
+
+func (store Store) UpdateCustomer(req *Customer) (*Customer, error) {
+	if err := store.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(customer_path, store.ID, req.ID)
+	res := new(Customer)
+
+	return res, store.api.Request("PATCH", endpoint, nil, req, res)
+}
+
+func (store Store) DeleteCustomer(id string) (bool, error) {
+	if err := store.CanMakeRequest(); err != nil {
+		return false, err
+	}
+
+	endpoint := fmt.Sprintf(customer_path, store.ID, id)
+	return store.api.RequestOk("DELETE", endpoint)
 }
 
 // ------------------------------------------------------------------------------------------------
