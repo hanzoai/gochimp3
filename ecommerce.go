@@ -516,11 +516,11 @@ type Variant struct {
 	Title string `json:"title"`
 
 	// Optional
-	Url               string  `json:"url,omitempty"`
+	URL               string  `json:"url,omitempty"`
 	SKU               string  `json:"sku,omitempty"`
 	Price             float64 `json:"price,omitempty"`
 	InventoryQuantity int     `json:"inventory_quantity,omitempty"`
-	ImageUrl          string  `json:"image_url,omitempty"`
+	ImageURL          string  `json:"image_url,omitempty"`
 	Backorders        string  `json:"backorders,omitempty"`
 	Visibility        string  `json:"visibility,omitempty"`
 }
