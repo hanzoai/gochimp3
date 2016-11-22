@@ -63,14 +63,14 @@ type ListResponse struct {
 	ListCreationRequest
 	withLinks
 
-	ID                string                   `json:"id"`
-	DateCreated       string                   `json:"date_created"`
-	ListRating        int                      `json:"list_rating"`
-	SubscribeURLShort string                   `json:"subscribe_url_short"`
-	SubscribeURLLong  string                   `json:"subscribe_url_long"`
-	BeamerAddress     string                   `json:"beamer_address"`
-	Modules           []map[string]interface{} `json:"modules"` // TODO undocumented
-	Stats             Stats                    `json:"stats"`
+	ID                string   `json:"id"`
+	DateCreated       string   `json:"date_created"`
+	ListRating        int      `json:"list_rating"`
+	SubscribeURLShort string   `json:"subscribe_url_short"`
+	SubscribeURLLong  string   `json:"subscribe_url_long"`
+	BeamerAddress     string   `json:"beamer_address"`
+	Modules           []string `json:"modules"`
+	Stats             Stats    `json:"stats"`
 
 	api *API
 }
