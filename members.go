@@ -24,13 +24,13 @@ type ListOfMembers struct {
 }
 
 type MemberRequest struct {
-	EmailAddress string `json:"email_address"`
-	Status       string `json:"status"`
-	// MergeFields  map[string]interface{} `json:"merge_fields"` // TODO undocumented
-	// Interests    map[string]interface{} `json:"interests"`    // TODO undocumented
-	Language string          `json:"language"`
-	VIP      bool            `json:"vip"`
-	Location *MemberLocation `json:"location"`
+	EmailAddress string            `json:"email_address"`
+	Status       string            `json:"status"`
+	MergeFields  map[string]string `json:"merge_fields,omitempty"`
+	Interests    map[string]bool   `json:"interests,omitempty"`
+	Language     string            `json:"language"`
+	VIP          bool              `json:"vip"`
+	Location     *MemberLocation   `json:"location"`
 }
 
 type Member struct {
