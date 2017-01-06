@@ -87,8 +87,12 @@ func (api API) Request(method, path string, params QueryParams, body, response i
 	if params != nil && !reflect.ValueOf(params).IsNil() {
 		queryParams := req.URL.Query()
 		for k, v := range params.Params() {
-			queryParams.Set(k, v)
+			if v != "" {
+				queryParams.Set(k, v)
+			}
 		}
+		req.URL.RawQuery = queryParams.Encode()
+		
 		if api.Debug {
 			log.Printf("Adding query params: %q\n", req.URL.Query())
 		}
