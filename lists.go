@@ -20,6 +20,8 @@ const (
 
 	interest_categories_path      = "/lists/%s/interest-categories"
 	single_interest_category_path = interest_categories_path + "/%s"
+
+	lists_batch_subscribe_members = "/lists/%s"
 )
 
 type ListQueryParams struct {
@@ -395,6 +397,43 @@ func (list ListResponse) DeleteInterestCategory(id string) (bool, error) {
 
 	endpoint := fmt.Sprintf(single_interest_category_path, list.ID, id)
 	return list.api.RequestOk("DELETE", endpoint)
+}
+
+// ------------------------------------------------------------------------------------------------
+// Batch subscribe list members
+// ------------------------------------------------------------------------------------------------
+type BatchSubscribeMembersError struct {
+	EmailAddress string `json:"email_address"`
+	ErrorMessage string ` json:"error"`
+}
+
+type BatchSubscribeMembersResponse struct {
+	withLinks
+
+	NewMembers     []ListOfMembers              `json:"new_members"`
+	UpdatedMembers []ListOfMembers              `json:"updated_members"`
+	ErrorMessages  []BatchSubscribeMembersError `json:"errors"`
+	TotalCreated   int                          `json:"total_created"`
+	TotalUpdated   int                          `json:"total_updated"`
+	ErrorCount     int                          `json:"error_count"`
+
+	api *API
+}
+
+type BatchSubscribeMembersRequest struct {
+	Members        []MemberRequest `json:"members"`
+	UpdateExisting bool            `json:"update_existing"`
+}
+
+func (list ListResponse) BatchSubscribeMembers(body *BatchSubscribeMembersRequest) (*BatchSubscribeMembersResponse, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(lists_batch_subscribe_members, list.ID)
+	response := new(BatchSubscribeMembersResponse)
+
+	return response, list.api.Request("POST", endpoint, nil, body, response)
 }
 
 // ------------------------------------------------------------------------------------------------
