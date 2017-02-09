@@ -21,6 +21,9 @@ const (
 	interest_categories_path      = "/lists/%s/interest-categories"
 	single_interest_category_path = interest_categories_path + "/%s"
 
+	interests_path       = "/lists/%s/interest-categories/%s/interests"
+	single_interest_path = interests_path + "/%s"
+
 	lists_batch_subscribe_members = "/lists/%s"
 )
 
@@ -398,6 +401,51 @@ func (list ListResponse) DeleteInterestCategory(id string) (bool, error) {
 	endpoint := fmt.Sprintf(single_interest_category_path, list.ID, id)
 	return list.api.RequestOk("DELETE", endpoint)
 }
+
+
+// ------------------------------------------------------------------------------------------------
+// Interest
+// ------------------------------------------------------------------------------------------------
+
+type ListOfInterests struct {
+	Interests  []Interest `json:"interests"`
+	CategoryID string     `json:"category_id"`
+	ListID     string     `json:"list_id"`
+	TotalItems int        `json:"total_items"`
+	withLinks
+}
+
+type Interest struct {
+	CategoryID   string `json:"category_id"`
+	ListID       string `json:"list_id"`
+	ID           string `json:"id"`
+	Name         string `json:"name"`
+	DisplayOrder int    `json:"display_order"`
+	withLinks
+}
+
+func (list ListResponse) GetInterests(interestCategoryID string, params *BasicQueryParams) (*ListOfInterests, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(interests_path, list.ID, interestCategoryID)
+	response := new(ListOfInterests)
+
+	return response, list.api.Request("GET", endpoint, params, nil, response)
+}
+
+func (list ListResponse) GetInterest(interestCategoryID, interestID string, params *BasicQueryParams) (*Interest, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(single_interest_path, list.ID, interestCategoryID, interestID)
+	response := new(Interest)
+
+	return response, list.api.Request("GET", endpoint, params, nil, response)
+}
+
 
 // ------------------------------------------------------------------------------------------------
 // Batch subscribe list members
