@@ -20,7 +20,7 @@ type ListOfMembers struct {
 	baseList
 
 	ListID  string   `json:"list_id"`
-	Members []Member `json:"member"`
+	Members []Member `json:"members"`
 }
 
 type MemberRequest struct {
