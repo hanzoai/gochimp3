@@ -57,7 +57,15 @@ type Store struct {
 	Links     []Link    `json:"_links,omitempty"`
 }
 
-func (store Store) CanMakeRequest() error {
+func validID(id string) error {
+	if id == "" {
+		return fmt.Errorf("Request requires a valid ID, but ID = '%v", id)
+	}
+
+	return nil
+}
+
+func (store Store) HasID() error {
 	if store.ID == "" {
 		return errors.New("No ID provided on store")
 	}
@@ -84,6 +92,10 @@ func (api API) GetStores(params *ExtendedQueryParams) (*StoreList, error) {
 }
 
 func (api API) GetStore(id string, params QueryParams) (*Store, error) {
+	if err := validID(id); err != nil {
+		return nil, err
+	}
+
 	res := new(Store)
 	res.api = &api
 
@@ -112,6 +124,9 @@ func (api API) UpdateStore(req *Store) (*Store, error) {
 }
 
 func (api API) DeleteStore(id string) (bool, error) {
+	if err := validID(id); err != nil {
+		return false, err
+	}
 	endpoint := fmt.Sprintf(store_path, id)
 	return api.RequestOk("DELETE", endpoint)
 }
@@ -144,6 +159,10 @@ func (store Store) GetCustomers(params *ExtendedQueryParams) (*CustomerList, err
 }
 
 func (store Store) GetCustomer(id string, params *BasicQueryParams) (*Customer, error) {
+	if err := validID(id); err != nil {
+		return nil, err
+	}
+
 	response := new(Customer)
 
 	if store.HasError() {
@@ -160,7 +179,7 @@ func (store Store) GetCustomer(id string, params *BasicQueryParams) (*Customer, 
 }
 
 func (store Store) CreateCustomer(req *Customer) (*Customer, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -171,7 +190,7 @@ func (store Store) CreateCustomer(req *Customer) (*Customer, error) {
 }
 
 func (store Store) UpdateCustomer(req *Customer) (*Customer, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -182,7 +201,11 @@ func (store Store) UpdateCustomer(req *Customer) (*Customer, error) {
 }
 
 func (store Store) DeleteCustomer(id string) (bool, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := validID(id); err != nil {
+		return false, err
+	}
+
+	if err := store.HasID(); err != nil {
 		return false, err
 	}
 
@@ -239,6 +262,10 @@ func (store Store) GetCarts(params *ExtendedQueryParams) (*CartList, error) {
 }
 
 func (store Store) GetCart(id string, params *BasicQueryParams) (*Cart, error) {
+	if err := validID(id); err != nil {
+		return nil, err
+	}
+
 	response := new(Cart)
 
 	if store.HasError() {
@@ -255,7 +282,7 @@ func (store Store) GetCart(id string, params *BasicQueryParams) (*Cart, error) {
 }
 
 func (store Store) CreateCart(req *Cart) (*Cart, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -266,7 +293,7 @@ func (store Store) CreateCart(req *Cart) (*Cart, error) {
 }
 
 func (store Store) UpdateCart(req *Cart) (*Cart, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -277,7 +304,11 @@ func (store Store) UpdateCart(req *Cart) (*Cart, error) {
 }
 
 func (store Store) DeleteCart(id string) (bool, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := validID(id); err != nil {
+		return false, err
+	}
+
+	if err := store.HasID(); err != nil {
 		return false, err
 	}
 
@@ -343,6 +374,10 @@ func (store Store) GetOrders(params *ExtendedQueryParams) (*OrderList, error) {
 }
 
 func (store Store) GetOrder(id string, params *BasicQueryParams) (*Order, error) {
+	if err := validID(id); err != nil {
+		return nil, err
+	}
+
 	response := new(Order)
 
 	if store.HasError() {
@@ -359,7 +394,7 @@ func (store Store) GetOrder(id string, params *BasicQueryParams) (*Order, error)
 }
 
 func (store Store) CreateOrder(req *Order) (*Order, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -370,7 +405,7 @@ func (store Store) CreateOrder(req *Order) (*Order, error) {
 }
 
 func (store Store) UpdateOrder(req *Order) (*Order, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -381,7 +416,11 @@ func (store Store) UpdateOrder(req *Order) (*Order, error) {
 }
 
 func (store Store) DeleteOrder(id string) (bool, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := validID(id); err != nil {
+		return false, err
+	}
+
+	if err := store.HasID(); err != nil {
 		return false, err
 	}
 
@@ -416,7 +455,7 @@ type Product struct {
 	Links []Link `json:"_links,omitempty"`
 }
 
-func (product Product) CanMakeRequest() error {
+func (product Product) HasID() error {
 	if product.ID == "" || product.StoreID == "" {
 		return errors.New("No ID provided on product")
 	}
@@ -453,6 +492,10 @@ func (store Store) GetProduct(id string, params *BasicQueryParams) (*Product, er
 		return nil, fmt.Errorf("The store has an error, can't process request")
 	}
 
+	if id == "" {
+		return nil, fmt.Errorf("Request requires id, but id = '%v'", id)
+	}
+
 	res := new(Product)
 	res.api = store.api
 	res.StoreID = store.ID
@@ -467,7 +510,7 @@ func (store Store) GetProduct(id string, params *BasicQueryParams) (*Product, er
 }
 
 func (store Store) CreateProduct(req *Product) (*Product, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -480,7 +523,7 @@ func (store Store) CreateProduct(req *Product) (*Product, error) {
 }
 
 func (store Store) UpdateProduct(req *Product) (*Product, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -493,7 +536,7 @@ func (store Store) UpdateProduct(req *Product) (*Product, error) {
 }
 
 func (store Store) DeleteProduct(id string) (bool, error) {
-	if err := store.CanMakeRequest(); err != nil {
+	if err := store.HasID(); err != nil {
 		return false, err
 	}
 
@@ -535,7 +578,7 @@ type VariantList struct {
 }
 
 func (product Product) CreateVariant(req *Variant) (*Variant, error) {
-	if err := product.CanMakeRequest(); err != nil {
+	if err := product.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -547,7 +590,7 @@ func (product Product) CreateVariant(req *Variant) (*Variant, error) {
 }
 
 func (product Product) UpdateVariant(req *Variant) (*Variant, error) {
-	if err := product.CanMakeRequest(); err != nil {
+	if err := product.HasID(); err != nil {
 		return nil, err
 	}
 
@@ -559,7 +602,7 @@ func (product Product) UpdateVariant(req *Variant) (*Variant, error) {
 }
 
 func (product Product) DeleteVariant(id string) (bool, error) {
-	if err := product.CanMakeRequest(); err != nil {
+	if err := product.HasID(); err != nil {
 		return false, err
 	}
 
