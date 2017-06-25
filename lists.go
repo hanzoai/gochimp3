@@ -25,6 +25,9 @@ const (
 	single_interest_path = interests_path + "/%s"
 
 	lists_batch_subscribe_members = "/lists/%s"
+
+	merge_fields_path = "/lists/%s/merge-fields"
+	merge_field_path  = merge_fields_path + "/%s"
 )
 
 type ListQueryParams struct {
@@ -61,7 +64,7 @@ type ListCreationRequest struct {
 	NotifyOnSubscribe   string           `json:"notify_on_subscribe"`
 	NotifyOnUnsubscribe string           `json:"notify_on_unsubscribe"`
 	EmailTypeOption     bool             `json:"email_type_option"`
-	Visibilty           string           `json:"visiblity"`
+	Visibility          string           `json:"visibility"`
 }
 
 type ListResponse struct {
@@ -402,7 +405,6 @@ func (list ListResponse) DeleteInterestCategory(id string) (bool, error) {
 	return list.api.RequestOk("DELETE", endpoint)
 }
 
-
 // ------------------------------------------------------------------------------------------------
 // Interest
 // ------------------------------------------------------------------------------------------------
@@ -446,7 +448,6 @@ func (list ListResponse) GetInterest(interestCategoryID, interestID string, para
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-
 // ------------------------------------------------------------------------------------------------
 // Batch subscribe list members
 // ------------------------------------------------------------------------------------------------
@@ -487,4 +488,69 @@ func (list ListResponse) BatchSubscribeMembers(body *BatchSubscribeMembersReques
 // ------------------------------------------------------------------------------------------------
 // Merge Fields
 // ------------------------------------------------------------------------------------------------
-// TODO
+
+type MergeFieldsParams struct {
+	ExtendedQueryParams
+
+	Type     string `json:"type"`
+	Required bool   `json:"required"`
+}
+
+type MergeFieldParams struct {
+	BasicQueryParams
+
+	MergeID string `json:"_"`
+}
+
+type ListOfMergeFields struct {
+	baseList
+
+	ListID      string       `json:"list_id"`
+	MergeFields []MergeField `json:"merge_fields"`
+}
+
+type MergeField struct {
+	MergeID      int               `json:"merge_id"`
+	Tag          string            `json:"tag"`
+	Name         string            `json:"name"`
+	Type         string            `json:"type"`
+	Required     bool              `json:"required"`
+	DefaultValue string            `json:"default_value"`
+	Public       bool              `json:"public"`
+	DisplayOrder int               `json:"display_order"`
+	Options      MergeFieldOptions `json:"options"`
+	HelpText     string            `json:"help_text"`
+	ListID       string            `json:"list_id"`
+
+	withLinks
+}
+
+type MergeFieldOptions struct {
+	DefaultCountry int      `json:"default_Country"`
+	PhoneFormat    string   `json:"phone_format"`
+	DateFormat     string   `json:"date_format"`
+	Choices        []string `json:"choices"`
+	Size           int      `json:"size"`
+}
+
+func (list ListResponse) GetMergeFields(params *MergeFieldsParams) (*ListOfMergeFields, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(merge_fields_path, list.ID)
+	response := new(ListOfMergeFields)
+
+	return response, list.api.Request("GET", endpoint, params, nil, response)
+}
+
+func (list ListResponse) GetMergeField(params *MergeFieldParams) (*MergeField, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(merge_field_path, list.ID, params.MergeID)
+	response := new(MergeField)
+
+	return response, list.api.Request("GET", endpoint, params, nil, response)
+}
