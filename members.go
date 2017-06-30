@@ -26,11 +26,12 @@ type ListOfMembers struct {
 type MemberRequest struct {
 	EmailAddress string            `json:"email_address"`
 	Status       string            `json:"status"`
+	StatusIfNew  string            `json:"status_if_new"`
 	MergeFields  map[string]string `json:"merge_fields,omitempty"`
 	Interests    map[string]bool   `json:"interests,omitempty"`
 	Language     string            `json:"language"`
 	VIP          bool              `json:"vip"`
-	Location     *MemberLocation   `json:"location"`
+	Location     *MemberLocation   `json:"location,omitempty"`
 }
 
 type Member struct {
