@@ -46,26 +46,55 @@ type ListOfCampaigns struct {
 	Campaigns []CampaignResponse `json:"campaigns"`
 }
 
-type CampaignCreationRequest struct {
-	Name                string           `json:"name"`
-	//Contact             Contact          `json:"contact"`
-	//PermissionReminder  string           `json:"permission_reminder"`
-	//UseArchiveBar       bool             `json:"use_archive_bar"`
-	//CampaignDefaults    CampaignDefaults `json:"campaign_defaults"`
-	//NotifyOnSubscribe   string           `json:"notify_on_subscribe"`
-	//NotifyOnUnsubscribe string           `json:"notify_on_unsubscribe"`
-	//EmailTypeOption     bool             `json:"email_type_option"`
-	//Visibility          string           `json:"visibility"`
+const (
+	CAMPAIGN_TYPE_REGULAR = "regular"
+	CAMPAIGN_TYPE_PLAINTEXT = "plaintext"
+	CAMPAIGN_TYPE_ABSPLIT = "absplit" // deprecated
+	CAMPAIGN_TYPE_RSS = "rss"
+	CAMPAIGN_TYPE_VARIATE = "variate"
+)
+
+type CampaignCreationRecipients struct {
+	ListId string `json:"list_id"`
+	// segment_opts not implemented
 }
 
-type CampaignRecipients struct {
+
+type CampaignCreationSettings struct {
+	SubjectLine     string `json:"subject_line"`
+	PreviewText     string `json:"preview_text"`
+	Title           string `json:"title"`
+	FromName        string `json:"from_name"`
+	ReplyTo         string `json:"reply_to"`
+	UseConversation bool `json:"use_conversation"`
+	ToName          string `json:"to_name"`
+	FolderId        string `json:"folder_id"`
+	Authenticate    bool `json:"authenticate"`
+	AutoFooter      bool `json:"auto_footer"`
+	InlineCss       bool `json:"inline_css"`
+	AutoTweet       bool `json:"auto_tweet"`
+	FbComments      bool `json:"fb_comments"`
+	TemplateId      uint `json:"template_id"`
+}
+
+type CampaignCreationRequest struct {
+	Type       string           `json:"type"` // must be one of the CAMPAIGN_TYPE_* consts
+	Recipients CampaignCreationRecipients `json:"recipients"`
+	Settings   CampaignCreationSettings `json:"settings"`
+	// variate_settings not implemented
+	Tracking          CampaignTracking `json:"tracking"`
+	// rss_opts not implemented
+	// social_card not implemented
+}
+
+type CampaignResponseRecipients struct {
 	ListId string `json:"list_id"`
 	ListName string `json:"list_name"`
 	SegmentText string `json:"segment_text"`
 	RecipientCount int `json:"recipient_count"`
 }
 
-type CampaignSettings struct {
+type CampaignResponseSettings struct {
 	SubjectLine     string `json:"subject_line"`
 	PreviewText     string `json:"preview_text"`
 	Title           string `json:"title"`
@@ -128,8 +157,8 @@ type CampaignResponse struct {
 	SendTime          string `json:"send_time"`
 	ContentType       string `json:"content_type"`
 	NeedsBlockRefresh bool   `json:"needs_block_refresh"`
-	Recipients        CampaignRecipients `json:"recipients"`
-	Settings          CampaignSettings `json:"settings"`
+	Recipients        CampaignResponseRecipients `json:"recipients"`
+	Settings          CampaignResponseSettings `json:"settings"`
 	Tracking          CampaignTracking `json:"tracking"`
 	ReportSummary     CampaignReportSummary `json:"report_summary"`
 	DeliveryStatus    CampaignDeliveryStatus `json:"delivery_status"`
