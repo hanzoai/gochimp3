@@ -8,6 +8,17 @@ import (
 const (
 	campaigns_path       = "/campaigns"
 	single_campaign_path = campaigns_path + "/%s"
+
+	send_test_path = single_campaign_path + "/actions/test"
+
+	CAMPAIGN_TYPE_REGULAR = "regular"
+	CAMPAIGN_TYPE_PLAINTEXT = "plaintext"
+	CAMPAIGN_TYPE_ABSPLIT = "absplit" // deprecated by mailchimp
+	CAMPAIGN_TYPE_RSS = "rss"
+	CAMPAIGN_TYPE_VARIATE = "variate"
+
+	CAMPAIGN_SEND_TYPE_HTML = "html"
+	CAMPAIGN_SEND_TYPE_PLAINTEXT = "plaintext"
 )
 
 
@@ -46,19 +57,10 @@ type ListOfCampaigns struct {
 	Campaigns []CampaignResponse `json:"campaigns"`
 }
 
-const (
-	CAMPAIGN_TYPE_REGULAR = "regular"
-	CAMPAIGN_TYPE_PLAINTEXT = "plaintext"
-	CAMPAIGN_TYPE_ABSPLIT = "absplit" // deprecated
-	CAMPAIGN_TYPE_RSS = "rss"
-	CAMPAIGN_TYPE_VARIATE = "variate"
-)
-
 type CampaignCreationRecipients struct {
 	ListId string `json:"list_id"`
 	// segment_opts not implemented
 }
-
 
 type CampaignCreationSettings struct {
 	SubjectLine     string `json:"subject_line"`
@@ -216,4 +218,23 @@ func (api API) UpdateCampaign(id string, body *CampaignCreationRequest) (*Campai
 func (api API) DeleteCampaign(id string) (bool, error) {
 	endpoint := fmt.Sprintf(single_campaign_path, id)
 	return api.RequestOk("DELETE", endpoint)
+}
+
+// ------------------------------------------------------------------------------------------------
+// Actions
+// ------------------------------------------------------------------------------------------------
+
+type TestEmailRequest struct {
+	TestEmails []string `json:"test_emails"`
+	SendType	string	`json:"send_type"`	// one of the CAMPAIGN_SEND_TYPE_* constants
+}
+
+func (api API) SendTestEmail(id string, body *TestEmailRequest) (bool, error) {
+	endpoint := fmt.Sprintf(send_test_path, id)
+	err := api.Request("POST", endpoint, nil, body, nil)
+
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
