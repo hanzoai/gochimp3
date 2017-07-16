@@ -24,6 +24,10 @@ type CampaignFolder struct {
 	api *API
 }
 
+type CampaignFolderCreationRequest struct {
+	Name string `json:"name"`
+}
+
 func (api API) GetCampaignFolders(params *CampaignFolderQueryParams) (*ListOfCampaignFolders, error) {
 	response := new(ListOfCampaignFolders)
 
@@ -37,4 +41,10 @@ func (api API) GetCampaignFolders(params *CampaignFolderQueryParams) (*ListOfCam
 	}
 
 	return response, nil
+}
+
+func (api API) CreateCampaignFolder(body *CampaignFolderCreationRequest) (*CampaignFolder, error) {
+	response := new(CampaignFolder)
+	response.api = &api
+	return response, api.Request("POST", campaign_folders_path, nil, body, response)
 }
