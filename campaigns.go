@@ -10,6 +10,7 @@ const (
 	single_campaign_path = campaigns_path + "/%s"
 
 	send_test_path = single_campaign_path + "/actions/test"
+	send_path = single_campaign_path + "/actions/send"
 
 	CAMPAIGN_TYPE_REGULAR = "regular"
 	CAMPAIGN_TYPE_PLAINTEXT = "plaintext"
@@ -229,8 +230,22 @@ type TestEmailRequest struct {
 	SendType	string	`json:"send_type"`	// one of the CAMPAIGN_SEND_TYPE_* constants
 }
 
+type SendCampaignRequest struct {
+	CampaignId	string	`json:"campaign_id"`
+}
+
 func (api API) SendTestEmail(id string, body *TestEmailRequest) (bool, error) {
 	endpoint := fmt.Sprintf(send_test_path, id)
+	err := api.Request("POST", endpoint, nil, body, nil)
+
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (api API) SendCampaign(id string, body *SendCampaignRequest) (bool, error) {
+	endpoint := fmt.Sprintf(send_path, id)
 	err := api.Request("POST", endpoint, nil, body, nil)
 
 	if err != nil {
