@@ -125,8 +125,8 @@ func (api API) GetLists(params *ListQueryParams) (*ListOfLists, error) {
 		return nil, err
 	}
 
-	for _, l := range response.Lists {
-		l.api = &api
+	for i, _ := range response.Lists {
+		response.Lists[i].api = &api
 	}
 
 	return response, nil
