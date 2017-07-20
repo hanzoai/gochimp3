@@ -338,6 +338,15 @@ type InterestCategory struct {
 	ID     string `json:"id"`
 
 	withLinks
+	api *API
+}
+
+func (interestCatgory InterestCategory) CanMakeRequest() error {
+	if interestCatgory.ID == "" {
+		return errors.New("No ID provided on interest category")
+	}
+
+	return nil
 }
 
 type InterestCategoriesQueryParams struct {
@@ -360,7 +369,16 @@ func (list ListResponse) GetInterestCategories(params *InterestCategoriesQueryPa
 	endpoint := fmt.Sprintf(interest_categories_path, list.ID)
 	response := new(ListOfInterestCategories)
 
-	return response, list.api.Request("GET", endpoint, params, nil, response)
+	err := list.api.Request("GET", endpoint, params, nil, response)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, _ := range response.Categories {
+		response.Categories[i].api = list.api
+	}
+
+	return response, nil
 }
 
 func (list ListResponse) GetInterestCategory(id string, params *BasicQueryParams) (*InterestCategory, error) {
@@ -370,6 +388,7 @@ func (list ListResponse) GetInterestCategory(id string, params *BasicQueryParams
 
 	endpoint := fmt.Sprintf(single_interest_category_path, list.ID, id)
 	response := new(InterestCategory)
+	response.api = list.api
 
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
@@ -381,6 +400,7 @@ func (list ListResponse) CreateInterestCategory(body *InterestCategoryRequest) (
 
 	endpoint := fmt.Sprintf(interest_categories_path, list.ID)
 	response := new(InterestCategory)
+	response.api = list.api
 
 	return response, list.api.Request("POST", endpoint, nil, body, response)
 }
@@ -392,6 +412,7 @@ func (list ListResponse) UpdateInterestCategory(id string, body *InterestCategor
 
 	endpoint := fmt.Sprintf(single_interest_category_path, list.ID, id)
 	response := new(InterestCategory)
+	response.api = list.api
 
 	return response, list.api.Request("PATCH", endpoint, nil, body, response)
 }
@@ -426,6 +447,11 @@ type Interest struct {
 	withLinks
 }
 
+type InterestRequest struct {
+	Name         string `json:"name"`
+	DisplayOrder int    `json:"display_order"`
+}
+
 func (list ListResponse) GetInterests(interestCategoryID string, params *BasicQueryParams) (*ListOfInterests, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
@@ -446,6 +472,17 @@ func (list ListResponse) GetInterest(interestCategoryID, interestID string, para
 	response := new(Interest)
 
 	return response, list.api.Request("GET", endpoint, params, nil, response)
+}
+
+func (interestCategory InterestCategory) CreateInterest(body *InterestRequest) (*Interest, error) {
+	if err := interestCategory.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(interests_path, interestCategory.ListID, interestCategory.ID)
+	response := new(Interest)
+
+	return response, interestCategory.api.Request("POST", endpoint, nil, body, response)
 }
 
 // ------------------------------------------------------------------------------------------------
