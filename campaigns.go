@@ -20,6 +20,13 @@ const (
 
 	CAMPAIGN_SEND_TYPE_HTML = "html"
 	CAMPAIGN_SEND_TYPE_PLAINTEXT = "plaintext"
+
+	CONDITION_MATCH_ANY = "any"
+	CONDITION_MATCH_ALL = "all"
+
+	CONDITION_TYPE_INTERESTS = "Interests"
+
+	CONDITION_OP_CONTAINS = "interestcontains"
 )
 
 
@@ -60,7 +67,22 @@ type ListOfCampaigns struct {
 
 type CampaignCreationRecipients struct {
 	ListId string `json:"list_id"`
-	// segment_opts not implemented
+	SegmentOptions CampaignCreationSegmentOptions `json:"segment_opts"`
+}
+
+type CampaignCreationSegmentOptions struct {
+	SavedSegmentId int `json:"saved_segment_id"`
+	Match      string               `json:"match"`		// one of CONDITION_MATCH_*
+
+	// this accepts various payloads. See http://developer.mailchimp.com/documentation/mailchimp/reference/campaigns/#create-post_campaigns
+	Conditions interface{} `json:"conditions"`
+}
+
+type InterestsCondition struct {
+	ConditionType string `json:"condition_type"`
+	Field string `json:"field"`
+	Op    string `json:"op"`
+	Value []string `json:"value"`
 }
 
 type CampaignCreationSettings struct {
