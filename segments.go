@@ -23,7 +23,7 @@ type SegmentRequest struct {
 type Segment struct {
 	SegmentRequest
 
-	ID          string `json:"id"`
+	ID          int `json:"id"`
 	MemberCount int    `json:"member_count"`
 	Type        string `json:"type"`
 	CreatedAt   string `json:"created_at"`
