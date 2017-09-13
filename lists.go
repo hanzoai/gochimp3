@@ -570,6 +570,36 @@ type MergeFieldOptions struct {
 	Size           int      `json:"size"`
 }
 
+type MergeFieldRequest struct {
+	// The tag used in MailChimp campaigns and for the /members endpoint.
+	Tag string `json:"tag"`
+
+	// The name of the merge field.
+	Name string `json:"name"`
+
+	// The type for the merge field.
+	// Possible Values: text, number, address, phone, date, url, image, url, radio, dropdown, birthday, zip
+	Type string `json:"type"`
+
+	// The boolean value if the merge field is required.
+	Required bool `json:"required"`
+
+	// The default value for the merge field if null.
+	DefaultValue string `json:"default_value"`
+
+	// Whether the merge field is displayed on the signup form.
+	Public bool `json:"public"`
+
+	// The order that the merge field displays on the list signup form.
+	DisplayOrder int `json:"display_order"`
+
+	// The order that the merge field displays on the list signup form.
+	Options MergeFieldOptions `json:"options"`
+
+	// Extra text to help the subscriber fill out the form.
+	HelpText string `json:"help_text"`
+}
+
 func (list ListResponse) GetMergeFields(params *MergeFieldsParams) (*ListOfMergeFields, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
@@ -590,4 +620,15 @@ func (list ListResponse) GetMergeField(params *MergeFieldParams) (*MergeField, e
 	response := new(MergeField)
 
 	return response, list.api.Request("GET", endpoint, params, nil, response)
+}
+
+func (list ListResponse) CreateMergeField(body *MergeFieldRequest) (*MergeField, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(merge_fields_path, list.ID)
+	response := new(MergeField)
+
+	return response, list.api.Request("POST", endpoint, nil, body, response)
 }
