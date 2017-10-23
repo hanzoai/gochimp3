@@ -132,6 +132,17 @@ func (api API) GetLists(params *ListQueryParams) (*ListOfLists, error) {
 	return response, nil
 }
 
+// NewListResponse returns a *ListResponse that is minimally viable for making
+// API requests. This is useful for such API requests that depend on a
+// ListResponse for its ID (e.g. CreateMember) without having to make a second
+// network request to get the list itself.
+func (api API) NewListResponse(id string) *ListResponse {
+	return &ListResponse{
+		ID:  id,
+		api: &api,
+	}
+}
+
 func (api API) GetList(id string, params *BasicQueryParams) (*ListResponse, error) {
 	endpoint := fmt.Sprintf(single_list_path, id)
 
