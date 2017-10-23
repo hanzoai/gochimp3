@@ -142,6 +142,18 @@ func (list ListResponse) UpdateMember(id string, body *MemberRequest) (*Member, 
 	return response, list.api.Request("PATCH", endpoint, nil, body, response)
 }
 
+func (list ListResponse) AddOrUpdateMember(id string, body *MemberRequest) (*Member, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(single_member_path, list.ID, id)
+	response := new(Member)
+	response.api = list.api
+
+	return response, list.api.Request("PUT", endpoint, nil, body, response)
+}
+
 func (list ListResponse) DeleteMember(id string) (bool, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return false, err
