@@ -15,9 +15,9 @@ type ListOfSegments struct {
 }
 
 type SegmentRequest struct {
-	Name          string         `json:"name"`
-	StaticSegment []string       `json:"static_segments"`
-	Options       SegmentOptions `json:"options"`
+	Name          string          `json:"name"`
+	StaticSegment []string        `json:"static_segment"`
+	Options       *SegmentOptions `json:"options,omitempty"`
 }
 
 type Segment struct {
