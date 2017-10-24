@@ -38,6 +38,36 @@ type SegmentOptions struct {
 	Conditions []SegmentConditional `json:"conditions"`
 }
 
+// SegmentBatchRequest represents arguments for bach modifying a static
+// segment. Note that both options must be provided, even if empty slice, and
+// cannot be nil, or mailchimp will return a 400.
+type SegmentBatchRequest struct {
+	MembersToAdd    []string `json:"members_to_add"`
+	MembersToRemove []string `json:"members_to_remove"`
+}
+
+// SegmentBatchResponse is the object returned by MailChimp from a request to
+// batch modify a static segment
+type SegmentBatchResponse struct {
+	MembersAdded   []Member `json:"members_added"`
+	MembersRemoved []Member `json:"members_removed"`
+
+	Errors []SegmentBatchError `json:"errors"`
+
+	TotalAdded   int `json:"total_added"`
+	TotalRemoved int `json:"total_removed"`
+	ErrorCount   int `json:"error_count"`
+
+	withLinks
+}
+
+// SegmentBatchError contains errors returned from batch modifying a static
+// segment
+type SegmentBatchError struct {
+	EmailAddresses []string `json:"email_addresses"`
+	Error          string   `json:"error"`
+}
+
 // SegmentConditional represents parameters to filter by
 type SegmentConditional struct {
 	Field string  `json:"field"`
@@ -109,6 +139,19 @@ func (list ListResponse) UpdateSegment(id string, body *SegmentRequest) (*Segmen
 	response := new(Segment)
 
 	return response, list.api.Request("PATCH", endpoint, nil, &body, response)
+}
+
+// BatchModifySegment adds and/or removes one or more emails from a static
+// segment using POST /lists/{list_id}/segments/{segment_id}
+func (list ListResponse) BatchModifySegment(id string, body *SegmentBatchRequest) (*SegmentBatchResponse, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(single_segment_path, list.ID, id)
+	response := new(SegmentBatchResponse)
+
+	return response, list.api.Request("POST", endpoint, nil, &body, response)
 }
 
 func (list ListResponse) DeleteSegment(id string) (bool, error) {
