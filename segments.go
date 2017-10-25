@@ -142,7 +142,9 @@ func (list ListResponse) UpdateSegment(id string, body *SegmentRequest) (*Segmen
 }
 
 // BatchModifySegment adds and/or removes one or more emails from a static
-// segment using POST /lists/{list_id}/segments/{segment_id}
+// segment using POST /lists/{list_id}/segments/{segment_id}. NOTE: You MUST
+// check SegmentBatchResponse for errors, as there may be multiple errors (i.e.
+// multiple failures to add/remove), and err may still be nil.
 func (list ListResponse) BatchModifySegment(id string, body *SegmentBatchRequest) (*SegmentBatchResponse, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
