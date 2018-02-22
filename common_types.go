@@ -12,11 +12,16 @@ type APIError struct {
 	Status   int    `json:"status,omitempty"`
 	Detail   string `json:"detail,omitempty"`
 	Instance string `json:"instance,omitempty"`
+	Errors   []struct {
+		Field   string `json:"field"`
+		Message string `json:"message"`
+	} `json:"errors,omitempty"`
 }
 
 func (err APIError) String() string {
-	return fmt.Sprintf("%d : %s : %s : %s", err.Status, err.Type, err.Title, err.Detail)
+	return fmt.Sprintf("%d : %s : %s : %s : %s", err.Status, err.Type, err.Title, err.Detail, err.Errors)
 }
+
 func (err APIError) Error() string {
 	return err.String()
 }
