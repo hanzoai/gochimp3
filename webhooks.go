@@ -21,6 +21,7 @@ type WebHookRequest struct {
 
 type WebHook struct {
 	WebHookRequest
+	ID     string `json:"id"`
 	ListID string `json:"list_id"`
 	withLinks
 }
