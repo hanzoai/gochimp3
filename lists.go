@@ -463,7 +463,7 @@ type InterestRequest struct {
 	DisplayOrder int    `json:"display_order"`
 }
 
-func (list ListResponse) GetInterests(interestCategoryID string, params *BasicQueryParams) (*ListOfInterests, error) {
+func (list ListResponse) GetInterests(interestCategoryID string, params *ExtendedQueryParams) (*ListOfInterests, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
