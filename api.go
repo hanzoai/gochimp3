@@ -121,7 +121,7 @@ func (api API) Request(method, path string, params QueryParams, body, response i
 
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
 		// Do not unmarshall response is nil
-		if response == nil || reflect.ValueOf(response).IsNil() {
+		if response == nil || reflect.ValueOf(response).IsNil() || len(data) == 0 {
 			return nil
 		}
 
