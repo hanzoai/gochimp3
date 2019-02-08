@@ -80,7 +80,7 @@ type MemberLocation struct {
 }
 
 type MemberNoteShort struct {
-	ID        string `json:"note_id"`
+	ID        int    `json:"note_id"`
 	CreatedAt string `json:"created_at"`
 	CreatedBy string `json:"created_by"`
 	Note      string `json:"note"`
