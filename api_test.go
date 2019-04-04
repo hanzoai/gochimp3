@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -78,15 +79,19 @@ func TestGetWithParams(t *testing.T) {
 		"one": "thing",
 		"two": "thing",
 	}
+	params := BasicQueryParams{
+		Fields:        []string{"marp", "parm"},
+		ExcludeFields: []string{"red", "fish"},
+	}
 
 	delegate = func(w http.ResponseWriter, r *http.Request) {
 		// check the query params
 		for k, v := range r.URL.Query() {
 			switch {
-			case k == "marp":
-				assert.Equal(t, "parm", v)
-			case k == "red":
-				assert.Equal(t, "fish", v)
+			case k == "fields":
+				assert.EqualValues(t, []string{strings.Join(params.Fields, ",")}, v)
+			case k == "exclude_fields":
+				assert.EqualValues(t, []string{strings.Join(params.ExcludeFields, ",")}, v)
 			default:
 				t.Fail()
 			}
@@ -98,10 +103,6 @@ func TestGetWithParams(t *testing.T) {
 	api := testAPI()
 
 	actual := make(map[string]interface{})
-	params := BasicQueryParams{
-		Fields:        []string{"marp", "parm"},
-		ExcludeFields: []string{"red", "fish"},
-	}
 	err := api.Request("GET", "/somewhere", &params, nil, &actual)
 	fatalIf(t, err)
 
