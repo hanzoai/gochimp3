@@ -39,6 +39,7 @@ func main() {
     // Add subscriber
     req := &gochimp3.MemberRequest{
         EmailAddress: "spam@zeekay.io",
+	Status: "subscribed",
     }
 
 	if _, err := list.CreateMember(req); err != nil {
