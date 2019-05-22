@@ -32,6 +32,7 @@ type MemberRequest struct {
 	Language     string                 `json:"language"`
 	VIP          bool                   `json:"vip"`
 	Location     *MemberLocation        `json:"location,omitempty"`
+	Tags         []string               `json:"tags,omitempty"`
 }
 
 type Member struct {
@@ -49,6 +50,7 @@ type Member struct {
 	LastChanged     string          `json:"last_changed"`
 	EmailClient     string          `json:"email_client"`
 	LastNote        MemberNoteShort `json:"last_note"`
+	Tags            []MemberTag     `json:"tags"`
 
 	api *API
 }
@@ -84,6 +86,11 @@ type MemberNoteShort struct {
 	CreatedAt string `json:"created_at"`
 	CreatedBy string `json:"created_by"`
 	Note      string `json:"note"`
+}
+
+type MemberTag struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func (list ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*ListOfMembers, error) {
