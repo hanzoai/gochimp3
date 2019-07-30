@@ -139,7 +139,7 @@ type LineItem struct {
 
 // Contact defines a single contact
 type Contact struct {
-	Company     string `json:"customer"`
+	Company     string `json:"company"`
 	Address1    string `json:"address1"`
 	Address2    string `json:"address2"`
 	City        string `json:"city"`
