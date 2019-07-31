@@ -44,7 +44,7 @@ func New(apiKey string) *API {
 	u.Path = Version
 
 	return &API{
-		User:     "rnahar@neighborly.com",
+		User:     "gochimp3",
 		Key:      apiKey,
 		endpoint: u.String(),
 	}
