@@ -25,6 +25,7 @@ type ListOfMembers struct {
 
 type MemberRequest struct {
 	EmailAddress string                 `json:"email_address"`
+	EmailType    string                 `json:"email_type,omitempty"`
 	Status       string                 `json:"status"`
 	StatusIfNew  string                 `json:"status_if_new,omitempty"`
 	MergeFields  map[string]interface{} `json:"merge_fields,omitempty"`
