@@ -577,7 +577,7 @@ type MergeFieldOptions struct {
 	DefaultCountry int      `json:"default_Country"`
 	PhoneFormat    string   `json:"phone_format"`
 	DateFormat     string   `json:"date_format"`
-	Choices        []string `json:"choices"`
+	Choices        []string `json:"choices,omitempty"`
 	Size           int      `json:"size"`
 }
 
