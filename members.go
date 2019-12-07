@@ -24,34 +24,34 @@ type ListOfMembers struct {
 }
 
 type MemberRequest struct {
-	EmailAddress string                 `json:"email_address"`
-	EmailType    string                 `json:"email_type,omitempty"`
-	Status       string                 `json:"status"`
-	StatusIfNew  string                 `json:"status_if_new,omitempty"`
-	MergeFields  map[string]interface{} `json:"merge_fields,omitempty"`
-	Interests    map[string]bool        `json:"interests,omitempty"`
-	Language     string                 `json:"language"`
-	VIP          bool                   `json:"vip"`
-	Location     *MemberLocation        `json:"location,omitempty"`
-	Tags         []string               `json:"tags,omitempty"`
+	EmailAddress    string                 `json:"email_address"`
+	EmailType       string                 `json:"email_type,omitempty"`
+	Status          string                 `json:"status"`
+	StatusIfNew     string                 `json:"status_if_new,omitempty"`
+	MergeFields     map[string]interface{} `json:"merge_fields,omitempty"`
+	Interests       map[string]bool        `json:"interests,omitempty"`
+	Language        string                 `json:"language"`
+	VIP             bool                   `json:"vip"`
+	Location        *MemberLocation        `json:"location,omitempty"`
+	IPOpt           string                 `json:"ip_opt,omitempty"`
+	IPSignup        string                 `json:"ip_signup,omitempty"`
+  Tags            []string               `json:"tags,omitempty"`
+	TimestampSignup string                 `json:"timestamp_signup,omitempty"`
+	TimestampOpt    string                 `json:"timestamp_opt,omitempty"`
 }
 
 type Member struct {
 	MemberRequest
 
-	ID              string          `json:"id"`
-	ListID          string          `json:"list_id"`
-	UniqueEmailID   string          `json:"unique_email_id"`
-	EmailType       string          `json:"email_type"`
-	Stats           MemberStats     `json:"stats"`
-	IPSignup        string          `json:"ip_signup"`
-	TimestampSignup string          `json:"timestamp_signup"`
-	TimestampOpt    string          `json:"timestamp_opt"`
-	MemberRating    int             `json:"member_rating"`
-	LastChanged     string          `json:"last_changed"`
-	EmailClient     string          `json:"email_client"`
-	LastNote        MemberNoteShort `json:"last_note"`
-	Tags            []MemberTag     `json:"tags"`
+	ID            string          `json:"id"`
+	ListID        string          `json:"list_id"`
+	UniqueEmailID string          `json:"unique_email_id"`
+	EmailType     string          `json:"email_type"`
+	Stats         MemberStats     `json:"stats"`
+	MemberRating  int             `json:"member_rating"`
+	LastChanged   string          `json:"last_changed"`
+	EmailClient   string          `json:"email_client"`
+	LastNote      MemberNoteShort `json:"last_note"`
 
 	api *API
 }
