@@ -25,6 +25,7 @@ type ListOfMembers struct {
 
 type MemberRequest struct {
 	EmailAddress    string                 `json:"email_address"`
+	EmailType       string                 `json:"email_type,omitempty"`
 	Status          string                 `json:"status"`
 	StatusIfNew     string                 `json:"status_if_new,omitempty"`
 	MergeFields     map[string]interface{} `json:"merge_fields,omitempty"`
@@ -34,6 +35,7 @@ type MemberRequest struct {
 	Location        *MemberLocation        `json:"location,omitempty"`
 	IPOpt           string                 `json:"ip_opt,omitempty"`
 	IPSignup        string                 `json:"ip_signup,omitempty"`
+  Tags            []string               `json:"tags,omitempty"`
 	TimestampSignup string                 `json:"timestamp_signup,omitempty"`
 	TimestampOpt    string                 `json:"timestamp_opt,omitempty"`
 }
@@ -85,6 +87,11 @@ type MemberNoteShort struct {
 	CreatedAt string `json:"created_at"`
 	CreatedBy string `json:"created_by"`
 	Note      string `json:"note"`
+}
+
+type MemberTag struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 func (list ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*ListOfMembers, error) {

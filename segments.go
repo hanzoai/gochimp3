@@ -23,7 +23,7 @@ type SegmentRequest struct {
 type Segment struct {
 	SegmentRequest
 
-	ID          int    `json:"id"`
+	ID          string    `json:"id"`
 	MemberCount int    `json:"member_count"`
 	Type        string `json:"type"`
 	CreatedAt   string `json:"created_at"`
@@ -70,9 +70,9 @@ type SegmentBatchError struct {
 
 // SegmentConditional represents parameters to filter by
 type SegmentConditional struct {
-	Field string  `json:"field"`
-	OP    string  `json:"op"`
-	Value float64 `json:"value"`
+	Field string      `json:"field"`
+	OP    string      `json:"op"`
+	Value interface{} `json:"value"`
 }
 
 type SegmentQueryParams struct {
