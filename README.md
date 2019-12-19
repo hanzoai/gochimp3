@@ -8,7 +8,7 @@ Golang client for [MailChimp API 3.0](http://developer.mailchimp.com/documentati
 Install with `go get`:
 
 ```bash
-$ go get github.com/zeekay/gochimp3
+$ go get github.com/hanzoai/gochimp3
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ import (
     "fmt"
     "os"
 
-    "github.com/zeekay/gochimp3"
+    "github.com/hanzoai/gochimp3"
 )
 
 const (
@@ -38,7 +38,7 @@ func main() {
 
     // Add subscriber
     req := &gochimp3.MemberRequest{
-        EmailAddress: "spam@zeekay.io",
+        EmailAddress: "spam@hanzo.ai",
 	Status: "subscribed",
     }
 
@@ -49,13 +49,13 @@ func main() {
 }
 ```
 
-[godoc-img]:      https://godoc.org/github.com/zeekay/gochimp3?status.svg
-[godoc-url]:      https://godoc.org/github.com/zeekay/gochimp3
-[travis-img]:     https://img.shields.io/travis/zeekay/gochimp3.svg
-[travis-url]:     https://travis-ci.org/zeekay/gochimp3
+[godoc-img]:      https://godoc.org/github.com/hanzoai/gochimp3?status.svg
+[godoc-url]:      https://godoc.org/github.com/hanzoai/gochimp3
+[travis-img]:     https://img.shields.io/travis/hanzoai/gochimp3.svg
+[travis-url]:     https://travis-ci.org/hanzoai/gochimp3
 [gitter-img]:     https://badges.gitter.im/join-chat.svg
-[gitter-url]:     https://gitter.im/zeekay/hi
+[gitter-url]:     https://gitter.im/hanzoai/chat
 
 <!-- not used -->
-[coveralls-img]:    https://coveralls.io/repos/zeekay/gochimp3/badge.svg?branch=master&service=github
-[coveralls-url]:    https://coveralls.io/github/zeekay/gochimp3?branch=master
+[coveralls-img]:    https://coveralls.io/repos/hanzoai/gochimp3/badge.svg?branch=master&service=github
+[coveralls-url]:    https://coveralls.io/github/hanzoai/gochimp3?branch=master
