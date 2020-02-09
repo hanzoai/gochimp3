@@ -8,6 +8,7 @@ import (
 const (
 	campaigns_path       = "/campaigns"
 	single_campaign_path = campaigns_path + "/%s"
+	campaign_content_path = single_campaign_path + "/content"
 
 	send_test_path = single_campaign_path + "/actions/test"
 	send_path = single_campaign_path + "/actions/send"
@@ -274,4 +275,45 @@ func (api API) SendCampaign(id string, body *SendCampaignRequest) (bool, error) 
 		return false, err
 	}
 	return true, nil
+}
+
+
+// ------------------------------------------------------------------------------------------------
+// Campaign Content Updates
+// ------------------------------------------------------------------------------------------------
+
+
+type CampaignContentTemplateRequest struct {
+	ID uint `json:"id,omitempty"`
+	Sections map[string]string `json:"sections,omitempty"`
+}
+
+type CampaignContentUpdateRequest struct {
+	PlainText string `json:"plain_text"`
+	Html string `json:"html"`
+	Url string `json:"url"`
+	Template *CampaignContentTemplateRequest `json:"template,omitempty"`
+}
+
+type CampaignContentResponse struct {
+	withLinks
+
+	PlainText string `json:"plain_text"`
+	Html string `json:"html"`
+	ArchiveHtml string `json:"archive_html"`
+	api *API
+}
+
+func (api API) GetCampaignContent(id string, params *BasicQueryParams) (*CampaignContentResponse, error) {
+	endpoint := fmt.Sprintf(campaign_content_path, id)
+	response := new(CampaignContentResponse)
+	response.api = &api
+	return response, api.Request("GET", endpoint, nil, params, response)
+}
+
+func (api API) UpdateCampaignContent(id string, body *CampaignContentUpdateRequest) (*CampaignContentResponse, error) {
+	endpoint := fmt.Sprintf(campaign_content_path, id)
+	response := new(CampaignContentResponse)
+	response.api = &api
+	return response, api.Request("PUT", endpoint, nil, body, response)
 }
