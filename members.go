@@ -23,6 +23,11 @@ type ListOfMembers struct {
 	Members []Member `json:"members"`
 }
 
+type ChimpTags struct {
+	TagID    	int                 `json:"id"`
+	TagName   	string              `json:"name"`
+}
+
 type MemberRequest struct {
 	EmailAddress    string                 `json:"email_address"`
 	EmailType       string                 `json:"email_type,omitempty"`
@@ -35,7 +40,7 @@ type MemberRequest struct {
 	Location        *MemberLocation        `json:"location,omitempty"`
 	IPOpt           string                 `json:"ip_opt,omitempty"`
 	IPSignup        string                 `json:"ip_signup,omitempty"`
-  Tags            []string               `json:"tags,omitempty"`
+  	Tags            []ChimpTags            `json:"tags,omitempty"`
 	TimestampSignup string                 `json:"timestamp_signup,omitempty"`
 	TimestampOpt    string                 `json:"timestamp_opt,omitempty"`
 }
