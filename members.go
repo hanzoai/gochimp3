@@ -35,7 +35,7 @@ type MemberRequest struct {
 	Location        *MemberLocation        `json:"location,omitempty"`
 	IPOpt           string                 `json:"ip_opt,omitempty"`
 	IPSignup        string                 `json:"ip_signup,omitempty"`
-  Tags            []string               `json:"tags,omitempty"`
+  	Tags            []MemberTag            `json:"tags,omitempty"`
 	TimestampSignup string                 `json:"timestamp_signup,omitempty"`
 	TimestampOpt    string                 `json:"timestamp_opt,omitempty"`
 }
