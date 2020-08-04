@@ -53,6 +53,12 @@ func main() {
 }
 ```
 
+### Set Timeout
+``` go
+client := gochimp3.New(apiKey)
+client.Timeout = (5 * time.Second)
+```
+
 [godoc-img]:      https://godoc.org/github.com/hanzoai/gochimp3?status.svg
 [godoc-url]:      https://godoc.org/github.com/hanzoai/gochimp3
 [travis-img]:     https://img.shields.io/travis/hanzoai/gochimp3.svg
