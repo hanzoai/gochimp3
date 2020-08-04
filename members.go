@@ -41,20 +41,21 @@ type MemberResponse struct {
 }
 
 type MemberRequest struct {
-	EmailAddress    string                 `json:"email_address"`
-	EmailType       string                 `json:"email_type,omitempty"`
-	Status          string                 `json:"status"`
-	StatusIfNew     string                 `json:"status_if_new,omitempty"`
-	MergeFields     map[string]interface{} `json:"merge_fields,omitempty"`
-	Interests       map[string]bool        `json:"interests,omitempty"`
-	Language        string                 `json:"language"`
-	VIP             bool                   `json:"vip"`
-	Location        *MemberLocation        `json:"location,omitempty"`
-	IPOpt           string                 `json:"ip_opt,omitempty"`
-	IPSignup        string                 `json:"ip_signup,omitempty"`
-	Tags            []string               `json:"tags,omitempty"`
-	TimestampSignup string                 `json:"timestamp_signup,omitempty"`
-	TimestampOpt    string                 `json:"timestamp_opt,omitempty"`
+	EmailAddress         string                 `json:"email_address"`
+	EmailType            string                 `json:"email_type,omitempty"`
+	Status               string                 `json:"status"`
+	StatusIfNew          string                 `json:"status_if_new,omitempty"`
+	MergeFields          map[string]interface{} `json:"merge_fields,omitempty"`
+	Interests            map[string]bool        `json:"interests,omitempty"`
+	Language             string                 `json:"language"`
+	VIP                  bool                   `json:"vip"`
+	Location             *MemberLocation        `json:"location,omitempty"`
+	MarketingPermissions *MarketingPermissions  `json:"marketing_permissions,omitempty"`
+	IPOpt                string                 `json:"ip_opt,omitempty"`
+	IPSignup             string                 `json:"ip_signup,omitempty"`
+	Tags                 []string               `json:"tags,omitempty"`
+	TimestampSignup      string                 `json:"timestamp_signup,omitempty"`
+	TimestampOpt         string                 `json:"timestamp_opt,omitempty"`
 }
 
 type Member struct {
@@ -97,6 +98,14 @@ type MemberLocation struct {
 	DSTOffset   int     `json:"dstoff"`
 	CountryCode string  `json:"country_code"`
 	Timezone    string  `json:"timezone"`
+}
+
+type MarketingPermissions []MarketingPermission
+
+type MarketingPermission struct {
+	MarketingPermissionID string `json:"marketing_permission_id"`
+	Text                  string `json:"text"`
+	Enabled               bool   `json:"enabled"`
 }
 
 type MemberNoteShort struct {
