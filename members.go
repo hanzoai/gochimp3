@@ -16,7 +16,7 @@ const (
 	single_member_note_path = member_notes_path + "/%s"
 
 	member_tags_path       = single_member_path + "/tags"
-	single_member_tag_path = member_notes_path + "/%s"
+	single_member_tag_path = member_tags_path + "/%s"
 )
 
 type ListOfMembers struct {
@@ -358,13 +358,17 @@ type ListOfMemberTags struct {
 	Tags []MemberTagLong `json:"tags"`
 }
 
-type MemberTagLong struct {
-	ID        int     `json:"id"`
-	Name      string  `json:"name"`
-	DataAdded *string `json:"date_added,omitempty"`
-	Status    string  `json:"status,omitempty"`
+type MemberTagShort struct {
+	ID     int    `json:"id"`
+	Name   string `json:"name"`
+	Status string `json:"status,omitempty"`
 
 	withLinks
+}
+
+type MemberTagLong struct {
+	DataAdded *string `json:"date_added,omitempty"`
+	MemberTagShort
 }
 
 func (mem Member) GetTags(params *ExtendedQueryParams) (*ListOfMemberTags, error) {
@@ -378,7 +382,7 @@ func (mem Member) GetTags(params *ExtendedQueryParams) (*ListOfMemberTags, error
 	return response, mem.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (mem Member) UpdateTags(tags []MemberTagLong) (*ListOfMemberTags, error) {
+func (mem Member) UpdateTags(tags []MemberTagShort) (*ListOfMemberTags, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -386,7 +390,7 @@ func (mem Member) UpdateTags(tags []MemberTagLong) (*ListOfMemberTags, error) {
 	endpoint := fmt.Sprintf(member_tags_path, mem.ListID, mem.ID)
 	response := new(ListOfMemberTags)
 
-	body := struct{ tags []MemberTagLong }{
+	body := struct{ tags []MemberTagShort }{
 		tags: tags,
 	}
 
