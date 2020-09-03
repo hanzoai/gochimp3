@@ -15,7 +15,7 @@ const (
 	member_notes_path       = single_member_path + "/notes"
 	single_member_note_path = member_notes_path + "/%s"
 
-	member_tags_path       = single_member_path + "/tag"
+	member_tags_path       = single_member_path + "/tags"
 	single_member_tag_path = member_notes_path + "/%s"
 )
 
