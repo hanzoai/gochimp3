@@ -358,17 +358,18 @@ type ListOfMemberTags struct {
 	Tags []MemberTagLong `json:"tags"`
 }
 
-type MemberTagShort struct {
-	ID     int    `json:"id"`
+type UpdateMemberTag struct {
 	Name   string `json:"name"`
-	Status string `json:"status,omitempty"`
-
-	withLinks
+	Status string `json:"status"`
 }
 
 type MemberTagLong struct {
+	ID        int     `json:"id"`
+	Name      string  `json:"name"`
 	DataAdded *string `json:"date_added,omitempty"`
-	MemberTagShort
+	Status    string  `json:"status,omitempty"`
+
+	withLinks
 }
 
 func (mem Member) GetTags(params *ExtendedQueryParams) (*ListOfMemberTags, error) {
@@ -382,7 +383,7 @@ func (mem Member) GetTags(params *ExtendedQueryParams) (*ListOfMemberTags, error
 	return response, mem.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (mem Member) UpdateTags(tags []MemberTagShort) (*ListOfMemberTags, error) {
+func (mem Member) UpdateTags(tags []UpdateMemberTag) (*ListOfMemberTags, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -390,8 +391,10 @@ func (mem Member) UpdateTags(tags []MemberTagShort) (*ListOfMemberTags, error) {
 	endpoint := fmt.Sprintf(member_tags_path, mem.ListID, mem.ID)
 	response := new(ListOfMemberTags)
 
-	body := struct{ tags []MemberTagShort }{
-		tags: tags,
+	body := struct {
+		Tags []UpdateMemberTag `json:"tags,omitempty"`
+	}{
+		Tags: tags,
 	}
 
 	return response, mem.api.Request("POST", endpoint, nil, &body, response)
