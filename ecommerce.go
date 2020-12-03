@@ -65,7 +65,7 @@ func validID(id string) error {
 	return nil
 }
 
-func (store Store) HasID() error {
+func (store *Store) HasID() error {
 	if store.ID == "" {
 		return errors.New("No ID provided on store")
 	}
@@ -81,7 +81,7 @@ type StoreList struct {
 	Links      []Link  `json:"_links"`
 }
 
-func (api API) GetStores(params *ExtendedQueryParams) (*StoreList, error) {
+func (api *API) GetStores(params *ExtendedQueryParams) (*StoreList, error) {
 	response := new(StoreList)
 	err := api.Request("GET", stores_path, params, nil, response)
 	if err != nil {
@@ -91,13 +91,13 @@ func (api API) GetStores(params *ExtendedQueryParams) (*StoreList, error) {
 	return response, nil
 }
 
-func (api API) GetStore(id string, params QueryParams) (*Store, error) {
+func (api *API) GetStore(id string, params QueryParams) (*Store, error) {
 	if err := validID(id); err != nil {
 		return nil, err
 	}
 
 	res := new(Store)
-	res.api = &api
+	res.api = api
 
 	endpoint := fmt.Sprintf(store_path, id)
 	err := api.Request("GET", endpoint, params, nil, res)
@@ -108,22 +108,22 @@ func (api API) GetStore(id string, params QueryParams) (*Store, error) {
 	return res, nil
 }
 
-func (api API) CreateStore(req *Store) (*Store, error) {
+func (api *API) CreateStore(req *Store) (*Store, error) {
 	res := new(Store)
-	res.api = &api
+	res.api = api
 
 	return res, api.Request("POST", stores_path, nil, req, res)
 }
 
-func (api API) UpdateStore(req *Store) (*Store, error) {
+func (api *API) UpdateStore(req *Store) (*Store, error) {
 	res := new(Store)
-	res.api = &api
+	res.api = api
 
 	endpoint := fmt.Sprintf(store_path, req.ID)
 	return res, api.Request("PATCH", endpoint, nil, req, res)
 }
 
-func (api API) DeleteStore(id string) (bool, error) {
+func (api *API) DeleteStore(id string) (bool, error) {
 	if err := validID(id); err != nil {
 		return false, err
 	}
@@ -143,7 +143,7 @@ type CustomerList struct {
 	Links      []Link     `json:"_links"`
 }
 
-func (store Store) GetCustomers(params *ExtendedQueryParams) (*CustomerList, error) {
+func (store *Store) GetCustomers(params *ExtendedQueryParams) (*CustomerList, error) {
 	response := new(CustomerList)
 
 	if store.HasError() {
@@ -158,7 +158,7 @@ func (store Store) GetCustomers(params *ExtendedQueryParams) (*CustomerList, err
 	return response, nil
 }
 
-func (store Store) GetCustomer(id string, params *BasicQueryParams) (*Customer, error) {
+func (store *Store) GetCustomer(id string, params *BasicQueryParams) (*Customer, error) {
 	if err := validID(id); err != nil {
 		return nil, err
 	}
@@ -178,7 +178,7 @@ func (store Store) GetCustomer(id string, params *BasicQueryParams) (*Customer, 
 	return response, nil
 }
 
-func (store Store) CreateCustomer(req *Customer) (*Customer, error) {
+func (store *Store) CreateCustomer(req *Customer) (*Customer, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -189,7 +189,7 @@ func (store Store) CreateCustomer(req *Customer) (*Customer, error) {
 	return res, store.api.Request("POST", endpoint, nil, req, res)
 }
 
-func (store Store) UpdateCustomer(req *Customer) (*Customer, error) {
+func (store *Store) UpdateCustomer(req *Customer) (*Customer, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -200,7 +200,7 @@ func (store Store) UpdateCustomer(req *Customer) (*Customer, error) {
 	return res, store.api.Request("PATCH", endpoint, nil, req, res)
 }
 
-func (store Store) DeleteCustomer(id string) (bool, error) {
+func (store *Store) DeleteCustomer(id string) (bool, error) {
 	if err := validID(id); err != nil {
 		return false, err
 	}
@@ -246,7 +246,7 @@ type Cart struct {
 	Links     []Link    `json:"_links,omitempty"`
 }
 
-func (store Store) GetCarts(params *ExtendedQueryParams) (*CartList, error) {
+func (store *Store) GetCarts(params *ExtendedQueryParams) (*CartList, error) {
 	response := new(CartList)
 
 	if store.HasError() {
@@ -261,7 +261,7 @@ func (store Store) GetCarts(params *ExtendedQueryParams) (*CartList, error) {
 	return response, nil
 }
 
-func (store Store) GetCart(id string, params *BasicQueryParams) (*Cart, error) {
+func (store *Store) GetCart(id string, params *BasicQueryParams) (*Cart, error) {
 	if err := validID(id); err != nil {
 		return nil, err
 	}
@@ -281,7 +281,7 @@ func (store Store) GetCart(id string, params *BasicQueryParams) (*Cart, error) {
 	return response, nil
 }
 
-func (store Store) CreateCart(req *Cart) (*Cart, error) {
+func (store *Store) CreateCart(req *Cart) (*Cart, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -292,7 +292,7 @@ func (store Store) CreateCart(req *Cart) (*Cart, error) {
 	return res, store.api.Request("POST", endpoint, nil, req, res)
 }
 
-func (store Store) UpdateCart(req *Cart) (*Cart, error) {
+func (store *Store) UpdateCart(req *Cart) (*Cart, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -303,7 +303,7 @@ func (store Store) UpdateCart(req *Cart) (*Cart, error) {
 	return res, store.api.Request("PATCH", endpoint, nil, req, res)
 }
 
-func (store Store) DeleteCart(id string) (bool, error) {
+func (store *Store) DeleteCart(id string) (bool, error) {
 	if err := validID(id); err != nil {
 		return false, err
 	}
@@ -358,7 +358,7 @@ type Order struct {
 	Links     []Link    `json:"_links,omitempty"`
 }
 
-func (store Store) GetOrders(params *ExtendedQueryParams) (*OrderList, error) {
+func (store *Store) GetOrders(params *ExtendedQueryParams) (*OrderList, error) {
 	response := new(OrderList)
 
 	if store.HasError() {
@@ -373,7 +373,7 @@ func (store Store) GetOrders(params *ExtendedQueryParams) (*OrderList, error) {
 	return response, nil
 }
 
-func (store Store) GetOrder(id string, params *BasicQueryParams) (*Order, error) {
+func (store *Store) GetOrder(id string, params *BasicQueryParams) (*Order, error) {
 	if err := validID(id); err != nil {
 		return nil, err
 	}
@@ -393,7 +393,7 @@ func (store Store) GetOrder(id string, params *BasicQueryParams) (*Order, error)
 	return response, nil
 }
 
-func (store Store) CreateOrder(req *Order) (*Order, error) {
+func (store *Store) CreateOrder(req *Order) (*Order, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -404,7 +404,7 @@ func (store Store) CreateOrder(req *Order) (*Order, error) {
 	return res, store.api.Request("POST", endpoint, nil, req, res)
 }
 
-func (store Store) UpdateOrder(req *Order) (*Order, error) {
+func (store *Store) UpdateOrder(req *Order) (*Order, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -415,7 +415,7 @@ func (store Store) UpdateOrder(req *Order) (*Order, error) {
 	return res, store.api.Request("PATCH", endpoint, nil, req, res)
 }
 
-func (store Store) DeleteOrder(id string) (bool, error) {
+func (store *Store) DeleteOrder(id string) (bool, error) {
 	if err := validID(id); err != nil {
 		return false, err
 	}
@@ -455,7 +455,7 @@ type Product struct {
 	Links []Link `json:"_links,omitempty"`
 }
 
-func (product Product) HasID() error {
+func (product *Product) HasID() error {
 	if product.ID == "" || product.StoreID == "" {
 		return errors.New("No ID provided on product")
 	}
@@ -472,7 +472,7 @@ type ProductList struct {
 	Links      []Link    `json:"_links"`
 }
 
-func (store Store) GetProducts(params *ExtendedQueryParams) (*ProductList, error) {
+func (store *Store) GetProducts(params *ExtendedQueryParams) (*ProductList, error) {
 	response := new(ProductList)
 
 	if store.HasError() {
@@ -487,7 +487,7 @@ func (store Store) GetProducts(params *ExtendedQueryParams) (*ProductList, error
 	return response, nil
 }
 
-func (store Store) GetProduct(id string, params *BasicQueryParams) (*Product, error) {
+func (store *Store) GetProduct(id string, params *BasicQueryParams) (*Product, error) {
 	if store.HasError() {
 		return nil, fmt.Errorf("The store has an error, can't process request")
 	}
@@ -509,7 +509,7 @@ func (store Store) GetProduct(id string, params *BasicQueryParams) (*Product, er
 	return res, nil
 }
 
-func (store Store) CreateProduct(req *Product) (*Product, error) {
+func (store *Store) CreateProduct(req *Product) (*Product, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -522,7 +522,7 @@ func (store Store) CreateProduct(req *Product) (*Product, error) {
 	return res, store.api.Request("POST", endpoint, nil, req, res)
 }
 
-func (store Store) UpdateProduct(req *Product) (*Product, error) {
+func (store *Store) UpdateProduct(req *Product) (*Product, error) {
 	if err := store.HasID(); err != nil {
 		return nil, err
 	}
@@ -535,7 +535,7 @@ func (store Store) UpdateProduct(req *Product) (*Product, error) {
 	return res, store.api.Request("PATCH", endpoint, nil, req, res)
 }
 
-func (store Store) DeleteProduct(id string) (bool, error) {
+func (store *Store) DeleteProduct(id string) (bool, error) {
 	if err := store.HasID(); err != nil {
 		return false, err
 	}
@@ -577,7 +577,7 @@ type VariantList struct {
 	Links      []Link    `json:"_links,omitempty"`
 }
 
-func (product Product) CreateVariant(req *Variant) (*Variant, error) {
+func (product *Product) CreateVariant(req *Variant) (*Variant, error) {
 	if err := product.HasID(); err != nil {
 		return nil, err
 	}
@@ -589,7 +589,7 @@ func (product Product) CreateVariant(req *Variant) (*Variant, error) {
 	return res, product.api.Request("POST", endpoint, nil, req, res)
 }
 
-func (product Product) UpdateVariant(req *Variant) (*Variant, error) {
+func (product *Product) UpdateVariant(req *Variant) (*Variant, error) {
 	if err := product.HasID(); err != nil {
 		return nil, err
 	}
@@ -601,7 +601,7 @@ func (product Product) UpdateVariant(req *Variant) (*Variant, error) {
 	return res, product.api.Request("PATCH", endpoint, nil, req, res)
 }
 
-func (product Product) DeleteVariant(id string) (bool, error) {
+func (product *Product) DeleteVariant(id string) (bool, error) {
 	if err := product.HasID(); err != nil {
 		return false, err
 	}

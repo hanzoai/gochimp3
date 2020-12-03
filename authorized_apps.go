@@ -30,7 +30,7 @@ type AuthorizedAppCreateResponse struct {
 	ViewerToken string `json:"viewer_token"`
 }
 
-func (api API) GetAuthorizedApps(params *ExtendedQueryParams) (*ListOfAuthorizedApps, error) {
+func (api *API) GetAuthorizedApps(params *ExtendedQueryParams) (*ListOfAuthorizedApps, error) {
 	response := new(ListOfAuthorizedApps)
 
 	err := api.Request("GET", authorized_apps_path, params, nil, response)
@@ -41,7 +41,7 @@ func (api API) GetAuthorizedApps(params *ExtendedQueryParams) (*ListOfAuthorized
 	return response, nil
 }
 
-func (api API) CreateAuthorizedApp(body *AuthorizedAppRequest) (*AuthorizedAppCreateResponse, error) {
+func (api *API) CreateAuthorizedApp(body *AuthorizedAppRequest) (*AuthorizedAppCreateResponse, error) {
 	response := new(AuthorizedAppCreateResponse)
 
 	err := api.Request("GET", authorized_apps_path, nil, body, response)
@@ -52,7 +52,7 @@ func (api API) CreateAuthorizedApp(body *AuthorizedAppRequest) (*AuthorizedAppCr
 	return response, nil
 }
 
-func (api API) GetAuthroizedApp(id string, params *BasicQueryParams) (*AuthorizedApp, error) {
+func (api *API) GetAuthroizedApp(id string, params *BasicQueryParams) (*AuthorizedApp, error) {
 	response := new(AuthorizedApp)
 	endpoint := fmt.Sprintf(single_authorized_app_path, id)
 

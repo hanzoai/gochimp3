@@ -83,7 +83,7 @@ type ListResponse struct {
 	api *API
 }
 
-func (list ListResponse) CanMakeRequest() error {
+func (list *ListResponse) CanMakeRequest() error {
 	if list.ID == "" {
 		return errors.New("No ID provided on list")
 	}
@@ -117,7 +117,7 @@ type CampaignDefaults struct {
 	Language  string `json:"language"`
 }
 
-func (api API) GetLists(params *ListQueryParams) (*ListOfLists, error) {
+func (api *API) GetLists(params *ListQueryParams) (*ListOfLists, error) {
 	response := new(ListOfLists)
 
 	err := api.Request("GET", lists_path, params, nil, response)
@@ -126,7 +126,7 @@ func (api API) GetLists(params *ListQueryParams) (*ListOfLists, error) {
 	}
 
 	for i, _ := range response.Lists {
-		response.Lists[i].api = &api
+		response.Lists[i].api = api
 	}
 
 	return response, nil
@@ -136,38 +136,38 @@ func (api API) GetLists(params *ListQueryParams) (*ListOfLists, error) {
 // API requests. This is useful for such API requests that depend on a
 // ListResponse for its ID (e.g. CreateMember) without having to make a second
 // network request to get the list itself.
-func (api API) NewListResponse(id string) *ListResponse {
+func (api *API) NewListResponse(id string) *ListResponse {
 	return &ListResponse{
 		ID:  id,
-		api: &api,
+		api: api,
 	}
 }
 
-func (api API) GetList(id string, params *BasicQueryParams) (*ListResponse, error) {
+func (api *API) GetList(id string, params *BasicQueryParams) (*ListResponse, error) {
 	endpoint := fmt.Sprintf(single_list_path, id)
 
 	response := new(ListResponse)
-	response.api = &api
+	response.api = api
 
 	return response, api.Request("GET", endpoint, params, nil, response)
 }
 
-func (api API) CreateList(body *ListCreationRequest) (*ListResponse, error) {
+func (api *API) CreateList(body *ListCreationRequest) (*ListResponse, error) {
 	response := new(ListResponse)
-	response.api = &api
+	response.api = api
 	return response, api.Request("POST", lists_path, nil, body, response)
 }
 
-func (api API) UpdateList(id string, body *ListCreationRequest) (*ListResponse, error) {
+func (api *API) UpdateList(id string, body *ListCreationRequest) (*ListResponse, error) {
 	endpoint := fmt.Sprintf(single_list_path, id)
 
 	response := new(ListResponse)
-	response.api = &api
+	response.api = api
 
 	return response, api.Request("PATCH", endpoint, nil, body, response)
 }
 
-func (api API) DeleteList(id string) (bool, error) {
+func (api *API) DeleteList(id string) (bool, error) {
 	endpoint := fmt.Sprintf(single_list_path, id)
 	return api.RequestOk("DELETE", endpoint)
 }
@@ -194,7 +194,7 @@ type AbuseReport struct {
 	withLinks
 }
 
-func (list ListResponse) GetAbuseReports(params *ExtendedQueryParams) (*ListOfAbuseReports, error) {
+func (list *ListResponse) GetAbuseReports(params *ExtendedQueryParams) (*ListOfAbuseReports, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -205,7 +205,7 @@ func (list ListResponse) GetAbuseReports(params *ExtendedQueryParams) (*ListOfAb
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) GetAbuseReport(id string, params *ExtendedQueryParams) (*AbuseReport, error) {
+func (list *ListResponse) GetAbuseReport(id string, params *ExtendedQueryParams) (*AbuseReport, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -242,7 +242,7 @@ type Activity struct {
 	withLinks
 }
 
-func (list ListResponse) GetActivity(params *BasicQueryParams) (*ListOfActivity, error) {
+func (list *ListResponse) GetActivity(params *BasicQueryParams) (*ListOfActivity, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -272,7 +272,7 @@ type Client struct {
 	withLinks
 }
 
-func (list ListResponse) GetClients(params *BasicQueryParams) (*ListOfClients, error) {
+func (list *ListResponse) GetClients(params *BasicQueryParams) (*ListOfClients, error) {
 	if list.ID == "" {
 		return nil, errors.New("No ID provided on list")
 	}
@@ -304,7 +304,7 @@ type GrowthHistory struct {
 	withLinks
 }
 
-func (list ListResponse) GetGrowthHistory(params *ExtendedQueryParams) (*ListOfGrownHistory, error) {
+func (list *ListResponse) GetGrowthHistory(params *ExtendedQueryParams) (*ListOfGrownHistory, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -315,7 +315,7 @@ func (list ListResponse) GetGrowthHistory(params *ExtendedQueryParams) (*ListOfG
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) GetGrowthHistoryForMonth(month string, params *BasicQueryParams) (*GrowthHistory, error) {
+func (list *ListResponse) GetGrowthHistoryForMonth(month string, params *BasicQueryParams) (*GrowthHistory, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -352,7 +352,7 @@ type InterestCategory struct {
 	api *API
 }
 
-func (interestCatgory InterestCategory) CanMakeRequest() error {
+func (interestCatgory *InterestCategory) CanMakeRequest() error {
 	if interestCatgory.ID == "" {
 		return errors.New("No ID provided on interest category")
 	}
@@ -366,13 +366,13 @@ type InterestCategoriesQueryParams struct {
 	Type string `json:"type"`
 }
 
-func (q InterestCategoriesQueryParams) Params() map[string]string {
+func (q *InterestCategoriesQueryParams) Params() map[string]string {
 	m := q.ExtendedQueryParams.Params()
 	m["type"] = q.Type
 	return m
 }
 
-func (list ListResponse) GetInterestCategories(params *InterestCategoriesQueryParams) (*ListOfInterestCategories, error) {
+func (list *ListResponse) GetInterestCategories(params *InterestCategoriesQueryParams) (*ListOfInterestCategories, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -392,7 +392,7 @@ func (list ListResponse) GetInterestCategories(params *InterestCategoriesQueryPa
 	return response, nil
 }
 
-func (list ListResponse) GetInterestCategory(id string, params *BasicQueryParams) (*InterestCategory, error) {
+func (list *ListResponse) GetInterestCategory(id string, params *BasicQueryParams) (*InterestCategory, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -404,7 +404,7 @@ func (list ListResponse) GetInterestCategory(id string, params *BasicQueryParams
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) CreateInterestCategory(body *InterestCategoryRequest) (*InterestCategory, error) {
+func (list *ListResponse) CreateInterestCategory(body *InterestCategoryRequest) (*InterestCategory, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -416,7 +416,7 @@ func (list ListResponse) CreateInterestCategory(body *InterestCategoryRequest) (
 	return response, list.api.Request("POST", endpoint, nil, body, response)
 }
 
-func (list ListResponse) UpdateInterestCategory(id string, body *InterestCategoryRequest) (*InterestCategory, error) {
+func (list *ListResponse) UpdateInterestCategory(id string, body *InterestCategoryRequest) (*InterestCategory, error) {
 	if list.ID == "" {
 		return nil, errors.New("No ID provided on list")
 	}
@@ -428,7 +428,7 @@ func (list ListResponse) UpdateInterestCategory(id string, body *InterestCategor
 	return response, list.api.Request("PATCH", endpoint, nil, body, response)
 }
 
-func (list ListResponse) DeleteInterestCategory(id string) (bool, error) {
+func (list *ListResponse) DeleteInterestCategory(id string) (bool, error) {
 	if list.ID == "" {
 		return false, errors.New("No ID provided on list")
 	}
@@ -463,7 +463,7 @@ type InterestRequest struct {
 	DisplayOrder int    `json:"display_order"`
 }
 
-func (list ListResponse) GetInterests(interestCategoryID string, params *ExtendedQueryParams) (*ListOfInterests, error) {
+func (list *ListResponse) GetInterests(interestCategoryID string, params *ExtendedQueryParams) (*ListOfInterests, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -474,7 +474,7 @@ func (list ListResponse) GetInterests(interestCategoryID string, params *Extende
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) GetInterest(interestCategoryID, interestID string, params *BasicQueryParams) (*Interest, error) {
+func (list *ListResponse) GetInterest(interestCategoryID, interestID string, params *BasicQueryParams) (*Interest, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -485,7 +485,7 @@ func (list ListResponse) GetInterest(interestCategoryID, interestID string, para
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (interestCategory InterestCategory) CreateInterest(body *InterestRequest) (*Interest, error) {
+func (interestCategory *InterestCategory) CreateInterest(body *InterestRequest) (*Interest, error) {
 	if err := interestCategory.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -522,7 +522,7 @@ type BatchSubscribeMembersRequest struct {
 	UpdateExisting bool            `json:"update_existing"`
 }
 
-func (list ListResponse) BatchSubscribeMembers(body *BatchSubscribeMembersRequest) (*BatchSubscribeMembersResponse, error) {
+func (list *ListResponse) BatchSubscribeMembers(body *BatchSubscribeMembersRequest) (*BatchSubscribeMembersResponse, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -611,7 +611,7 @@ type MergeFieldRequest struct {
 	HelpText string `json:"help_text"`
 }
 
-func (list ListResponse) GetMergeFields(params *MergeFieldsParams) (*ListOfMergeFields, error) {
+func (list *ListResponse) GetMergeFields(params *MergeFieldsParams) (*ListOfMergeFields, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -622,7 +622,7 @@ func (list ListResponse) GetMergeFields(params *MergeFieldsParams) (*ListOfMerge
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) GetMergeField(params *MergeFieldParams) (*MergeField, error) {
+func (list *ListResponse) GetMergeField(params *MergeFieldParams) (*MergeField, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -633,7 +633,7 @@ func (list ListResponse) GetMergeField(params *MergeFieldParams) (*MergeField, e
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) CreateMergeField(body *MergeFieldRequest) (*MergeField, error) {
+func (list *ListResponse) CreateMergeField(body *MergeFieldRequest) (*MergeField, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}

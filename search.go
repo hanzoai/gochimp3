@@ -11,7 +11,7 @@ type SearchMembersQueryParams struct {
 	listID string
 }
 
-func (q SearchMembersQueryParams) Params() map[string]string {
+func (q *SearchMembersQueryParams) Params() map[string]string {
 	m := q.BasicQueryParams.Params()
 	m["query"] = q.Query
 	m["list_id"] = q.listID
@@ -29,7 +29,7 @@ type Matches struct {
 	TotalItems int64    `json:"total_items"`
 }
 
-func (list ListResponse) SearchMembers(params *SearchMembersQueryParams) (*SearchMembersResponse, error) {
+func (list *ListResponse) SearchMembers(params *SearchMembersQueryParams) (*SearchMembersResponse, error) {
 	response := new(SearchMembersResponse)
 
 	params.listID = list.ID
