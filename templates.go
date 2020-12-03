@@ -22,7 +22,7 @@ type TemplateQueryParams struct {
 	FolderId string
 }
 
-func (q TemplateQueryParams) Params() map[string]string {
+func (q *TemplateQueryParams) Params() map[string]string {
 	m := q.ExtendedQueryParams.Params()
 	m["created_by"] = q.CreatedBy
 	m["since_created_at"] = q.SinceCreatedAt
@@ -72,7 +72,7 @@ type TemplateDefaultContentResponse struct {
 	api *API
 }
 
-func (template TemplateResponse) CanMakeRequest() error {
+func (template *TemplateResponse) CanMakeRequest() error {
 	if template.ID == 0 {
 		return errors.New("No ID provided on template")
 	}
@@ -80,7 +80,7 @@ func (template TemplateResponse) CanMakeRequest() error {
 	return nil
 }
 
-func (api API) GetTemplates(params *TemplateQueryParams) (*ListOfTemplates, error) {
+func (api *API) GetTemplates(params *TemplateQueryParams) (*ListOfTemplates, error) {
 	response := new(ListOfTemplates)
 
 	err := api.Request("GET", templates_path, params, nil, response)
@@ -89,44 +89,44 @@ func (api API) GetTemplates(params *TemplateQueryParams) (*ListOfTemplates, erro
 	}
 
 	for _, l := range response.Templates {
-		l.api = &api
+		l.api = api
 	}
 
 	return response, nil
 }
 
-func (api API) GetTemplate(id string, params *BasicQueryParams) (*TemplateResponse, error) {
+func (api *API) GetTemplate(id string, params *BasicQueryParams) (*TemplateResponse, error) {
 	endpoint := fmt.Sprintf(single_template_path, id)
 
 	response := new(TemplateResponse)
-	response.api = &api
+	response.api = api
 
 	return response, api.Request("GET", endpoint, params, nil, response)
 }
 
-func (api API) CreateTemplate(body *TemplateCreationRequest) (*TemplateResponse, error) {
+func (api *API) CreateTemplate(body *TemplateCreationRequest) (*TemplateResponse, error) {
 	response := new(TemplateResponse)
-	response.api = &api
+	response.api = api
 	return response, api.Request("POST", templates_path, nil, body, response)
 }
 
-func (api API) UpdateTemplate(id string, body *TemplateCreationRequest) (*TemplateResponse, error) {
+func (api *API) UpdateTemplate(id string, body *TemplateCreationRequest) (*TemplateResponse, error) {
 	endpoint := fmt.Sprintf(single_template_path, id)
 
 	response := new(TemplateResponse)
-	response.api = &api
+	response.api = api
 
 	return response, api.Request("PATCH", endpoint, nil, body, response)
 }
 
-func (api API) DeleteTemplate(id string) (bool, error) {
+func (api *API) DeleteTemplate(id string) (bool, error) {
 	endpoint := fmt.Sprintf(single_template_path, id)
 	return api.RequestOk("DELETE", endpoint)
 }
 
-func (api API) GetTemplateDefaultContent(id string, params *BasicQueryParams) (*TemplateDefaultContentResponse, error) {
+func (api *API) GetTemplateDefaultContent(id string, params *BasicQueryParams) (*TemplateDefaultContentResponse, error) {
 	endpoint := fmt.Sprintf(template_default_path, id)
 	response := new(TemplateDefaultContentResponse)
-	response.api = &api
+	response.api = api
 	return response, api.Request("GET", endpoint, params, nil, response)
 }

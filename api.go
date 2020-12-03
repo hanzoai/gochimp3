@@ -51,7 +51,7 @@ func New(apiKey string) *API {
 }
 
 // Request will make a call to the actual API.
-func (api API) Request(method, path string, params QueryParams, body, response interface{}) error {
+func (api *API) Request(method, path string, params QueryParams, body, response interface{}) error {
 	client := &http.Client{Transport: api.Transport}
 	if api.Timeout > 0 {
 		client.Timeout = api.Timeout
@@ -138,7 +138,7 @@ func (api API) Request(method, path string, params QueryParams, body, response i
 }
 
 // RequestOk Make Request ignoring body and return true if HTTP status code is 2xx.
-func (api API) RequestOk(method, path string) (bool, error) {
+func (api *API) RequestOk(method, path string) (bool, error) {
 	err := api.Request(method, path, nil, nil, nil)
 	if err != nil {
 		return false, err
