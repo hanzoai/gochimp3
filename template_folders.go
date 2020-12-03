@@ -28,7 +28,7 @@ type TemplateFolderCreationRequest struct {
 	Name string `json:"name"`
 }
 
-func (api API) GetTemplateFolders(params *TemplateFolderQueryParams) (*ListOfTemplateFolders, error) {
+func (api *API) GetTemplateFolders(params *TemplateFolderQueryParams) (*ListOfTemplateFolders, error) {
 	response := new(ListOfTemplateFolders)
 
 	err := api.Request("GET", template_folders_path, params, nil, response)
@@ -37,14 +37,14 @@ func (api API) GetTemplateFolders(params *TemplateFolderQueryParams) (*ListOfTem
 	}
 
 	for _, l := range response.Folders {
-		l.api = &api
+		l.api = api
 	}
 
 	return response, nil
 }
 
-func (api API) CreateTemplateFolder(body *TemplateFolderCreationRequest) (*TemplateFolder, error) {
+func (api *API) CreateTemplateFolder(body *TemplateFolderCreationRequest) (*TemplateFolder, error) {
 	response := new(TemplateFolder)
-	response.api = &api
+	response.api = api
 	return response, api.Request("POST", template_folders_path, nil, body, response)
 }

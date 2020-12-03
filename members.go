@@ -74,7 +74,7 @@ type Member struct {
 	api *API
 }
 
-func (mem Member) CanMakeRequest() error {
+func (mem *Member) CanMakeRequest() error {
 	if mem.ListID == "" {
 		return errors.New("No ListID provided")
 	}
@@ -120,7 +120,7 @@ type MemberTag struct {
 	Name string `json:"name"`
 }
 
-func (list ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*ListOfMembers, error) {
+func (list *ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*ListOfMembers, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ func (list ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*Lis
 	return response, nil
 }
 
-func (list ListResponse) GetMember(id string, params *BasicQueryParams) (*Member, error) {
+func (list *ListResponse) GetMember(id string, params *BasicQueryParams) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -152,7 +152,7 @@ func (list ListResponse) GetMember(id string, params *BasicQueryParams) (*Member
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) CreateMember(body *MemberRequest) (*Member, error) {
+func (list *ListResponse) CreateMember(body *MemberRequest) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func (list ListResponse) CreateMember(body *MemberRequest) (*Member, error) {
 	return response, list.api.Request("POST", endpoint, nil, body, response)
 }
 
-func (list ListResponse) UpdateMember(id string, body *MemberRequest) (*Member, error) {
+func (list *ListResponse) UpdateMember(id string, body *MemberRequest) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -176,7 +176,7 @@ func (list ListResponse) UpdateMember(id string, body *MemberRequest) (*Member, 
 	return response, list.api.Request("PATCH", endpoint, nil, body, response)
 }
 
-func (list ListResponse) AddOrUpdateMember(id string, body *MemberRequest) (*Member, error) {
+func (list *ListResponse) AddOrUpdateMember(id string, body *MemberRequest) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -188,7 +188,7 @@ func (list ListResponse) AddOrUpdateMember(id string, body *MemberRequest) (*Mem
 	return response, list.api.Request("PUT", endpoint, nil, body, response)
 }
 
-func (list ListResponse) DeleteMember(id string) (bool, error) {
+func (list *ListResponse) DeleteMember(id string) (bool, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return false, err
 	}
@@ -219,7 +219,7 @@ type MemberActivity struct {
 	ParentCampaign string `json:"parent_campaign"`
 }
 
-func (mem Member) GetActivity(params *BasicQueryParams) (*ListOfMemberActivity, error) {
+func (mem *Member) GetActivity(params *BasicQueryParams) (*ListOfMemberActivity, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -249,7 +249,7 @@ type MemberGoal struct {
 	Data          string `json:"data"`
 }
 
-func (mem Member) GetGoals(params *BasicQueryParams) (*ListOfMemberGoals, error) {
+func (mem *Member) GetGoals(params *BasicQueryParams) (*ListOfMemberGoals, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -284,7 +284,7 @@ type MemberNoteLong struct {
 	withLinks
 }
 
-func (mem Member) GetNotes(params *ExtendedQueryParams) (*ListOfMemberNotes, error) {
+func (mem *Member) GetNotes(params *ExtendedQueryParams) (*ListOfMemberNotes, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -295,7 +295,7 @@ func (mem Member) GetNotes(params *ExtendedQueryParams) (*ListOfMemberNotes, err
 	return response, mem.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (mem Member) CreateNote(msg string) (*MemberNoteLong, error) {
+func (mem *Member) CreateNote(msg string) (*MemberNoteLong, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -310,7 +310,7 @@ func (mem Member) CreateNote(msg string) (*MemberNoteLong, error) {
 	return response, mem.api.Request("POST", endpoint, nil, &body, response)
 }
 
-func (mem Member) UpdateNote(id, msg string) (*MemberNoteLong, error) {
+func (mem *Member) UpdateNote(id, msg string) (*MemberNoteLong, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -325,7 +325,7 @@ func (mem Member) UpdateNote(id, msg string) (*MemberNoteLong, error) {
 	return response, mem.api.Request("PATCH", endpoint, nil, &body, response)
 }
 
-func (mem Member) GetNote(id string, params *BasicQueryParams) (*MemberNoteLong, error) {
+func (mem *Member) GetNote(id string, params *BasicQueryParams) (*MemberNoteLong, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -336,7 +336,7 @@ func (mem Member) GetNote(id string, params *BasicQueryParams) (*MemberNoteLong,
 	return response, mem.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (mem Member) DeleteNote(id string) (bool, error) {
+func (mem *Member) DeleteNote(id string) (bool, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return false, err
 	}
