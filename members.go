@@ -18,7 +18,7 @@ const (
 	member_tags_path       = single_member_path + "/tags"
 	single_member_tag_path = member_tags_path + "/%s"
 
-	delete_permanent_path = single_member_path + "/acttions/delete-permanent"
+	delete_permanent_path = single_member_path + "/actions/delete-permanent"
 )
 
 type ListOfMembers struct {
