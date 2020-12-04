@@ -17,6 +17,8 @@ const (
 
 	member_tags_path       = single_member_path + "/tags"
 	single_member_tag_path = member_tags_path + "/%s"
+
+	delete_permanent_path = single_member_path + "/acttions/delete-permanent"
 )
 
 type ListOfMembers struct {
@@ -198,6 +200,15 @@ func (list *ListResponse) DeleteMember(id string) (bool, error) {
 
 	endpoint := fmt.Sprintf(single_member_path, list.ID, id)
 	return list.api.RequestOk("DELETE", endpoint)
+}
+
+func (list *ListResponse) DeleteMemberPermanent(id string) (bool, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return false, err
+	}
+
+	endpoint := fmt.Sprintf(delete_permanent_path, list.ID, id)
+	return list.api.RequestOk("POST", endpoint)
 }
 
 // ------------------------------------------------------------------------------------------------
