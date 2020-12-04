@@ -1,4 +1,4 @@
-module github.com/bradleyfalk/gochimp3
+module github.com/tw1nk/gochimp3
 
 go 1.13
 
