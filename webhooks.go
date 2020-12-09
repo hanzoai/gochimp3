@@ -41,7 +41,7 @@ type HookEvents struct {
 	Campaign    bool `json:"campaign"`
 }
 
-func (list ListResponse) CreateWebHooks(body *WebHookRequest) (*WebHook, error) {
+func (list *ListResponse) CreateWebHooks(body *WebHookRequest) (*WebHook, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (list ListResponse) CreateWebHooks(body *WebHookRequest) (*WebHook, error) 
 	return response, list.api.Request("POST", endpoint, nil, &body, response)
 }
 
-func (list ListResponse) UpdateWebHook(id string, body *WebHookRequest) (*WebHook, error) {
+func (list *ListResponse) UpdateWebHook(id string, body *WebHookRequest) (*WebHook, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (list ListResponse) UpdateWebHook(id string, body *WebHookRequest) (*WebHoo
 
 // TODO - does this take filters? undocumented
 
-func (list ListResponse) GetWebHooks() (*ListOfWebHooks, error) {
+func (list *ListResponse) GetWebHooks() (*ListOfWebHooks, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (list ListResponse) GetWebHooks() (*ListOfWebHooks, error) {
 	return response, list.api.Request("GET", endpoint, nil, nil, response)
 }
 
-func (list ListResponse) GetWebHook(id string) (*WebHook, error) {
+func (list *ListResponse) GetWebHook(id string) (*WebHook, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (list ListResponse) GetWebHook(id string) (*WebHook, error) {
 	return response, list.api.Request("GET", endpoint, nil, nil, response)
 }
 
-func (list ListResponse) DeleteWebHook(id string) (bool, error) {
+func (list *ListResponse) DeleteWebHook(id string) (bool, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return false, err
 	}
