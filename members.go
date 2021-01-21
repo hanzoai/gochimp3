@@ -6,8 +6,9 @@ import (
 )
 
 const (
-	members_path       = "/lists/%s/members"
-	single_member_path = members_path + "/%s"
+	members_path           = "/lists/%s/members"
+	single_member_path     = members_path + "/%s"
+	single_member_tag_path = members_path + "/%s/tags"
 
 	member_activity_path = single_member_path + "/activity"
 	member_goals_path    = single_member_path + "/goals"
@@ -53,6 +54,15 @@ type Member struct {
 	Tags            []MemberTag     `json:"tags"`
 
 	api *API
+}
+
+type TagsRequest struct {
+	Tags []TagRequest `json:"tags"`
+}
+
+type TagRequest struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
 }
 
 func (mem Member) CanMakeRequest() error {
@@ -168,6 +178,15 @@ func (list ListResponse) DeleteMember(id string) (bool, error) {
 
 	endpoint := fmt.Sprintf(single_member_path, list.ID, id)
 	return list.api.RequestOk("DELETE", endpoint)
+}
+
+func (list ListResponse) AddTagsToMember(id string, body *TagsRequest) error {
+	if err := list.CanMakeRequest(); err != nil {
+		return err
+	}
+
+	endpoint := fmt.Sprintf(single_member_tag_path, list.ID, id)
+	return list.api.Request("POST", endpoint, nil, body, nil)
 }
 
 // ------------------------------------------------------------------------------------------------
