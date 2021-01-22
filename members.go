@@ -15,6 +15,11 @@ const (
 
 	member_notes_path       = single_member_path + "/notes"
 	single_member_note_path = member_notes_path + "/%s"
+
+	member_tags_path       = single_member_path + "/tags"
+	single_member_tag_path = member_tags_path + "/%s"
+
+	delete_permanent_path = single_member_path + "/actions/delete-permanent"
 )
 
 type ListOfMembers struct {
@@ -24,34 +29,53 @@ type ListOfMembers struct {
 	Members []Member `json:"members"`
 }
 
+type MemberResponse struct {
+	EmailAddress    string                 `json:"email_address"`
+	EmailType       string                 `json:"email_type,omitempty"`
+	Status          string                 `json:"status"`
+	StatusIfNew     string                 `json:"status_if_new,omitempty"`
+	MergeFields     map[string]interface{} `json:"merge_fields,omitempty"`
+	Interests       map[string]bool        `json:"interests,omitempty"`
+	Language        string                 `json:"language"`
+	VIP             bool                   `json:"vip"`
+	Location        *MemberLocation        `json:"location,omitempty"`
+	IPOpt           string                 `json:"ip_opt,omitempty"`
+	IPSignup        string                 `json:"ip_signup,omitempty"`
+	Tags            []MemberTag            `json:"tags,omitempty"`
+	TimestampSignup string                 `json:"timestamp_signup,omitempty"`
+	TimestampOpt    string                 `json:"timestamp_opt,omitempty"`
+}
+
 type MemberRequest struct {
-	EmailAddress string                 `json:"email_address"`
-	Status       string                 `json:"status"`
-	StatusIfNew  string                 `json:"status_if_new,omitempty"`
-	MergeFields  map[string]interface{} `json:"merge_fields,omitempty"`
-	Interests    map[string]bool        `json:"interests,omitempty"`
-	Language     string                 `json:"language"`
-	VIP          bool                   `json:"vip"`
-	Location     *MemberLocation        `json:"location,omitempty"`
-	Tags         []string               `json:"tags,omitempty"`
+	EmailAddress         string                 `json:"email_address"`
+	EmailType            string                 `json:"email_type,omitempty"`
+	Status               string                 `json:"status"`
+	StatusIfNew          string                 `json:"status_if_new,omitempty"`
+	MergeFields          map[string]interface{} `json:"merge_fields,omitempty"`
+	Interests            map[string]bool        `json:"interests,omitempty"`
+	Language             string                 `json:"language"`
+	VIP                  bool                   `json:"vip"`
+	Location             *MemberLocation        `json:"location,omitempty"`
+	MarketingPermissions *MarketingPermissions  `json:"marketing_permissions,omitempty"`
+	IPOpt                string                 `json:"ip_opt,omitempty"`
+	IPSignup             string                 `json:"ip_signup,omitempty"`
+	Tags                 []string               `json:"tags,omitempty"`
+	TimestampSignup      string                 `json:"timestamp_signup,omitempty"`
+	TimestampOpt         string                 `json:"timestamp_opt,omitempty"`
 }
 
 type Member struct {
-	MemberRequest
+	MemberResponse
 
-	ID              string          `json:"id"`
-	ListID          string          `json:"list_id"`
-	UniqueEmailID   string          `json:"unique_email_id"`
-	EmailType       string          `json:"email_type"`
-	Stats           MemberStats     `json:"stats"`
-	IPSignup        string          `json:"ip_signup"`
-	TimestampSignup string          `json:"timestamp_signup"`
-	TimestampOpt    string          `json:"timestamp_opt"`
-	MemberRating    int             `json:"member_rating"`
-	LastChanged     string          `json:"last_changed"`
-	EmailClient     string          `json:"email_client"`
-	LastNote        MemberNoteShort `json:"last_note"`
-	Tags            []MemberTag     `json:"tags"`
+	ID            string          `json:"id"`
+	ListID        string          `json:"list_id"`
+	UniqueEmailID string          `json:"unique_email_id"`
+	EmailType     string          `json:"email_type"`
+	Stats         MemberStats     `json:"stats"`
+	MemberRating  int             `json:"member_rating"`
+	LastChanged   string          `json:"last_changed"`
+	EmailClient   string          `json:"email_client"`
+	LastNote      MemberNoteShort `json:"last_note"`
 
 	api *API
 }
@@ -91,6 +115,14 @@ type MemberLocation struct {
 	Timezone    string  `json:"timezone"`
 }
 
+type MarketingPermissions []MarketingPermission
+
+type MarketingPermission struct {
+	MarketingPermissionID string `json:"marketing_permission_id"`
+	Text                  string `json:"text"`
+	Enabled               bool   `json:"enabled"`
+}
+
 type MemberNoteShort struct {
 	ID        int    `json:"note_id"`
 	CreatedAt string `json:"created_at"`
@@ -103,7 +135,7 @@ type MemberTag struct {
 	Name string `json:"name"`
 }
 
-func (list ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*ListOfMembers, error) {
+func (list *ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*ListOfMembers, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -123,7 +155,7 @@ func (list ListResponse) GetMembers(params *InterestCategoriesQueryParams) (*Lis
 	return response, nil
 }
 
-func (list ListResponse) GetMember(id string, params *BasicQueryParams) (*Member, error) {
+func (list *ListResponse) GetMember(id string, params *BasicQueryParams) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -135,7 +167,7 @@ func (list ListResponse) GetMember(id string, params *BasicQueryParams) (*Member
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) CreateMember(body *MemberRequest) (*Member, error) {
+func (list *ListResponse) CreateMember(body *MemberRequest) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -147,7 +179,7 @@ func (list ListResponse) CreateMember(body *MemberRequest) (*Member, error) {
 	return response, list.api.Request("POST", endpoint, nil, body, response)
 }
 
-func (list ListResponse) UpdateMember(id string, body *MemberRequest) (*Member, error) {
+func (list *ListResponse) UpdateMember(id string, body *MemberRequest) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -159,7 +191,7 @@ func (list ListResponse) UpdateMember(id string, body *MemberRequest) (*Member, 
 	return response, list.api.Request("PATCH", endpoint, nil, body, response)
 }
 
-func (list ListResponse) AddOrUpdateMember(id string, body *MemberRequest) (*Member, error) {
+func (list *ListResponse) AddOrUpdateMember(id string, body *MemberRequest) (*Member, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -171,7 +203,7 @@ func (list ListResponse) AddOrUpdateMember(id string, body *MemberRequest) (*Mem
 	return response, list.api.Request("PUT", endpoint, nil, body, response)
 }
 
-func (list ListResponse) DeleteMember(id string) (bool, error) {
+func (list *ListResponse) DeleteMember(id string) (bool, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return false, err
 	}
@@ -211,7 +243,7 @@ type MemberActivity struct {
 	ParentCampaign string `json:"parent_campaign"`
 }
 
-func (mem Member) GetActivity(params *BasicQueryParams) (*ListOfMemberActivity, error) {
+func (mem *Member) GetActivity(params *BasicQueryParams) (*ListOfMemberActivity, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -241,7 +273,7 @@ type MemberGoal struct {
 	Data          string `json:"data"`
 }
 
-func (mem Member) GetGoals(params *BasicQueryParams) (*ListOfMemberGoals, error) {
+func (mem *Member) GetGoals(params *BasicQueryParams) (*ListOfMemberGoals, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -276,7 +308,7 @@ type MemberNoteLong struct {
 	withLinks
 }
 
-func (mem Member) GetNotes(params *ExtendedQueryParams) (*ListOfMemberNotes, error) {
+func (mem *Member) GetNotes(params *ExtendedQueryParams) (*ListOfMemberNotes, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -287,7 +319,7 @@ func (mem Member) GetNotes(params *ExtendedQueryParams) (*ListOfMemberNotes, err
 	return response, mem.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (mem Member) CreateNote(msg string) (*MemberNoteLong, error) {
+func (mem *Member) CreateNote(msg string) (*MemberNoteLong, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -302,7 +334,7 @@ func (mem Member) CreateNote(msg string) (*MemberNoteLong, error) {
 	return response, mem.api.Request("POST", endpoint, nil, &body, response)
 }
 
-func (mem Member) UpdateNote(id, msg string) (*MemberNoteLong, error) {
+func (mem *Member) UpdateNote(id, msg string) (*MemberNoteLong, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -317,7 +349,7 @@ func (mem Member) UpdateNote(id, msg string) (*MemberNoteLong, error) {
 	return response, mem.api.Request("PATCH", endpoint, nil, &body, response)
 }
 
-func (mem Member) GetNote(id string, params *BasicQueryParams) (*MemberNoteLong, error) {
+func (mem *Member) GetNote(id string, params *BasicQueryParams) (*MemberNoteLong, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -328,11 +360,63 @@ func (mem Member) GetNote(id string, params *BasicQueryParams) (*MemberNoteLong,
 	return response, mem.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (mem Member) DeleteNote(id string) (bool, error) {
+func (mem *Member) DeleteNote(id string) (bool, error) {
 	if err := mem.CanMakeRequest(); err != nil {
 		return false, err
 	}
 
 	endpoint := fmt.Sprintf(single_member_note_path, mem.ListID, mem.ID, id)
 	return mem.api.RequestOk("DELETE", endpoint)
+}
+
+// ------------------------------------------------------------------------------------------------
+// TAGS
+// ------------------------------------------------------------------------------------------------
+
+type ListOfMemberTags struct {
+	baseList
+
+	Tags []MemberTagLong `json:"tags"`
+}
+
+type UpdateMemberTag struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+}
+
+type MemberTagLong struct {
+	ID        int     `json:"id"`
+	Name      string  `json:"name"`
+	DataAdded *string `json:"date_added,omitempty"`
+	Status    string  `json:"status,omitempty"`
+
+	withLinks
+}
+
+func (mem *Member) GetTags(params *ExtendedQueryParams) (*ListOfMemberTags, error) {
+	if err := mem.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(member_tags_path, mem.ListID, mem.ID)
+	response := new(ListOfMemberTags)
+
+	return response, mem.api.Request("GET", endpoint, params, nil, response)
+}
+
+func (mem *Member) UpdateTags(tags []UpdateMemberTag) (*ListOfMemberTags, error) {
+	if err := mem.CanMakeRequest(); err != nil {
+		return nil, err
+	}
+
+	endpoint := fmt.Sprintf(member_tags_path, mem.ListID, mem.ID)
+	response := new(ListOfMemberTags)
+
+	body := struct {
+		Tags []UpdateMemberTag `json:"tags,omitempty"`
+	}{
+		Tags: tags,
+	}
+
+	return response, mem.api.Request("POST", endpoint, nil, &body, response)
 }

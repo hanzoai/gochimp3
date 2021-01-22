@@ -23,7 +23,7 @@ type SegmentRequest struct {
 type Segment struct {
 	SegmentRequest
 
-	ID          int    `json:"id"`
+	ID          string    `json:"id"`
 	MemberCount int    `json:"member_count"`
 	Type        string `json:"type"`
 	CreatedAt   string `json:"created_at"`
@@ -70,9 +70,9 @@ type SegmentBatchError struct {
 
 // SegmentConditional represents parameters to filter by
 type SegmentConditional struct {
-	Field string  `json:"field"`
-	OP    string  `json:"op"`
-	Value float64 `json:"value"`
+	Field string      `json:"field"`
+	OP    string      `json:"op"`
+	Value interface{} `json:"value"`
 }
 
 type SegmentQueryParams struct {
@@ -85,7 +85,7 @@ type SegmentQueryParams struct {
 	BeforeUpdatedAt string
 }
 
-func (q SegmentQueryParams) Params() map[string]string {
+func (q *SegmentQueryParams) Params() map[string]string {
 	m := q.ExtendedQueryParams.Params()
 
 	m["type"] = q.Type
@@ -97,7 +97,7 @@ func (q SegmentQueryParams) Params() map[string]string {
 	return m
 }
 
-func (list ListResponse) GetSegments(params *SegmentQueryParams) (*ListOfSegments, error) {
+func (list *ListResponse) GetSegments(params *SegmentQueryParams) (*ListOfSegments, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (list ListResponse) GetSegments(params *SegmentQueryParams) (*ListOfSegment
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) GetSegment(id string, params *BasicQueryParams) (*Segment, error) {
+func (list *ListResponse) GetSegment(id string, params *BasicQueryParams) (*Segment, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func (list ListResponse) GetSegment(id string, params *BasicQueryParams) (*Segme
 	return response, list.api.Request("GET", endpoint, params, nil, response)
 }
 
-func (list ListResponse) CreateSegment(body *SegmentRequest) (*Segment, error) {
+func (list *ListResponse) CreateSegment(body *SegmentRequest) (*Segment, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func (list ListResponse) CreateSegment(body *SegmentRequest) (*Segment, error) {
 	return response, list.api.Request("POST", endpoint, nil, &body, response)
 }
 
-func (list ListResponse) UpdateSegment(id string, body *SegmentRequest) (*Segment, error) {
+func (list *ListResponse) UpdateSegment(id string, body *SegmentRequest) (*Segment, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ func (list ListResponse) UpdateSegment(id string, body *SegmentRequest) (*Segmen
 // segment using POST /lists/{list_id}/segments/{segment_id}. NOTE: You MUST
 // check SegmentBatchResponse for errors, as there may be multiple errors (i.e.
 // multiple failures to add/remove), and err may still be nil.
-func (list ListResponse) BatchModifySegment(id string, body *SegmentBatchRequest) (*SegmentBatchResponse, error) {
+func (list *ListResponse) BatchModifySegment(id string, body *SegmentBatchRequest) (*SegmentBatchResponse, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -156,7 +156,7 @@ func (list ListResponse) BatchModifySegment(id string, body *SegmentBatchRequest
 	return response, list.api.Request("POST", endpoint, nil, &body, response)
 }
 
-func (list ListResponse) DeleteSegment(id string) (bool, error) {
+func (list *ListResponse) DeleteSegment(id string) (bool, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return false, err
 	}

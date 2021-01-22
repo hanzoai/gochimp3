@@ -35,7 +35,7 @@ type RootResponse struct {
 }
 
 // GetRoot queries the root of the API for stats
-func (api API) GetRoot(params *BasicQueryParams) (*RootResponse, error) {
+func (api *API) GetRoot(params *BasicQueryParams) (*RootResponse, error) {
 	response := new(RootResponse)
 	err := api.Request("GET", root_path, params, nil, response)
 	if err != nil {

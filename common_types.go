@@ -18,16 +18,16 @@ type APIError struct {
 	} `json:"errors,omitempty"`
 }
 
-func (err APIError) String() string {
+func (err *APIError) String() string {
 	return fmt.Sprintf("%d : %s : %s : %s : %s", err.Status, err.Type, err.Title, err.Detail, err.Errors)
 }
 
-func (err APIError) Error() string {
+func (err *APIError) Error() string {
 	return err.String()
 }
 
 // HasError checks if this call had an error
-func (err APIError) HasError() bool {
+func (err *APIError) HasError() bool {
 	return err.Type != ""
 }
 
@@ -44,7 +44,7 @@ type ExtendedQueryParams struct {
 	Offset int
 }
 
-func (q ExtendedQueryParams) Params() map[string]string {
+func (q *ExtendedQueryParams) Params() map[string]string {
 	m := q.BasicQueryParams.Params()
 	m["count"] = fmt.Sprintf("%d", q.Count)
 	m["offset"] = fmt.Sprintf("%d", q.Offset)
@@ -60,7 +60,7 @@ type BasicQueryParams struct {
 	ExcludeFields []string
 }
 
-func (q BasicQueryParams) Params() map[string]string {
+func (q *BasicQueryParams) Params() map[string]string {
 	return map[string]string{
 		"status":         q.Status,
 		"sort_field":     q.SortField,
@@ -139,7 +139,7 @@ type LineItem struct {
 
 // Contact defines a single contact
 type Contact struct {
-	Company     string `json:"customer"`
+	Company     string `json:"company"`
 	Address1    string `json:"address1"`
 	Address2    string `json:"address2"`
 	City        string `json:"city"`

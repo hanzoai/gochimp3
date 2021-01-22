@@ -8,6 +8,7 @@ import (
 const (
 	campaigns_path       = "/campaigns"
 	single_campaign_path = campaigns_path + "/%s"
+	campaign_content_path = single_campaign_path + "/content"
 
 	send_test_path = single_campaign_path + "/actions/test"
 	send_path = single_campaign_path + "/actions/send"
@@ -199,7 +200,7 @@ func (campaign CampaignResponse) CanMakeRequest() error {
 	return nil
 }
 
-func (api API) GetCampaigns(params *CampaignQueryParams) (*ListOfCampaigns, error) {
+func (api *API) GetCampaigns(params *CampaignQueryParams) (*ListOfCampaigns, error) {
 	response := new(ListOfCampaigns)
 
 	err := api.Request("GET", campaigns_path, params, nil, response)
@@ -208,37 +209,37 @@ func (api API) GetCampaigns(params *CampaignQueryParams) (*ListOfCampaigns, erro
 	}
 
 	for _, l := range response.Campaigns {
-		l.api = &api
+		l.api = api
 	}
 
 	return response, nil
 }
 
-func (api API) GetCampaign(id string, params *BasicQueryParams) (*CampaignResponse, error) {
+func (api *API) GetCampaign(id string, params *BasicQueryParams) (*CampaignResponse, error) {
 	endpoint := fmt.Sprintf(single_campaign_path, id)
 
 	response := new(CampaignResponse)
-	response.api = &api
+	response.api = api
 
 	return response, api.Request("GET", endpoint, params, nil, response)
 }
 
-func (api API) CreateCampaign(body *CampaignCreationRequest) (*CampaignResponse, error) {
+func (api *API) CreateCampaign(body *CampaignCreationRequest) (*CampaignResponse, error) {
 	response := new(CampaignResponse)
-	response.api = &api
+	response.api = api
 	return response, api.Request("POST", campaigns_path, nil, body, response)
 }
 
-func (api API) UpdateCampaign(id string, body *CampaignCreationRequest) (*CampaignResponse, error) {
+func (api *API) UpdateCampaign(id string, body *CampaignCreationRequest) (*CampaignResponse, error) {
 	endpoint := fmt.Sprintf(single_campaign_path, id)
 
 	response := new(CampaignResponse)
-	response.api = &api
+	response.api = api
 
 	return response, api.Request("PATCH", endpoint, nil, body, response)
 }
 
-func (api API) DeleteCampaign(id string) (bool, error) {
+func (api *API) DeleteCampaign(id string) (bool, error) {
 	endpoint := fmt.Sprintf(single_campaign_path, id)
 	return api.RequestOk("DELETE", endpoint)
 }
@@ -256,7 +257,7 @@ type SendCampaignRequest struct {
 	CampaignId	string	`json:"campaign_id"`
 }
 
-func (api API) SendTestEmail(id string, body *TestEmailRequest) (bool, error) {
+func (api *API) SendTestEmail(id string, body *TestEmailRequest) (bool, error) {
 	endpoint := fmt.Sprintf(send_test_path, id)
 	err := api.Request("POST", endpoint, nil, body, nil)
 
@@ -266,7 +267,7 @@ func (api API) SendTestEmail(id string, body *TestEmailRequest) (bool, error) {
 	return true, nil
 }
 
-func (api API) SendCampaign(id string, body *SendCampaignRequest) (bool, error) {
+func (api *API) SendCampaign(id string, body *SendCampaignRequest) (bool, error) {
 	endpoint := fmt.Sprintf(send_path, id)
 	err := api.Request("POST", endpoint, nil, body, nil)
 
@@ -274,4 +275,45 @@ func (api API) SendCampaign(id string, body *SendCampaignRequest) (bool, error) 
 		return false, err
 	}
 	return true, nil
+}
+
+
+// ------------------------------------------------------------------------------------------------
+// Campaign Content Updates
+// ------------------------------------------------------------------------------------------------
+
+
+type CampaignContentTemplateRequest struct {
+	ID uint `json:"id,omitempty"`
+	Sections map[string]string `json:"sections,omitempty"`
+}
+
+type CampaignContentUpdateRequest struct {
+	PlainText string `json:"plain_text"`
+	Html string `json:"html"`
+	Url string `json:"url"`
+	Template *CampaignContentTemplateRequest `json:"template,omitempty"`
+}
+
+type CampaignContentResponse struct {
+	withLinks
+
+	PlainText string `json:"plain_text"`
+	Html string `json:"html"`
+	ArchiveHtml string `json:"archive_html"`
+	api *API
+}
+
+func (api *API) GetCampaignContent(id string, params *BasicQueryParams) (*CampaignContentResponse, error) {
+	endpoint := fmt.Sprintf(campaign_content_path, id)
+	response := new(CampaignContentResponse)
+	response.api = api
+	return response, api.Request("GET", endpoint, nil, params, response)
+}
+
+func (api *API) UpdateCampaignContent(id string, body *CampaignContentUpdateRequest) (*CampaignContentResponse, error) {
+	endpoint := fmt.Sprintf(campaign_content_path, id)
+	response := new(CampaignContentResponse)
+	response.api = api
+	return response, api.Request("PUT", endpoint, nil, body, response)
 }
