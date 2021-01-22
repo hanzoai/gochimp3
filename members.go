@@ -8,7 +8,6 @@ import (
 const (
 	members_path           = "/lists/%s/members"
 	single_member_path     = members_path + "/%s"
-	single_member_tag_path = members_path + "/%s/tags"
 
 	member_activity_path = single_member_path + "/activity"
 	member_goals_path    = single_member_path + "/goals"
