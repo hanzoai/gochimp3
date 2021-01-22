@@ -6,8 +6,9 @@ import (
 )
 
 const (
-	members_path       = "/lists/%s/members"
-	single_member_path = members_path + "/%s"
+	members_path           = "/lists/%s/members"
+	single_member_path     = members_path + "/%s"
+	single_member_tag_path = members_path + "/%s/tags"
 
 	member_activity_path = single_member_path + "/activity"
 	member_goals_path    = single_member_path + "/goals"
@@ -77,6 +78,15 @@ type Member struct {
 	LastNote      MemberNoteShort `json:"last_note"`
 
 	api *API
+}
+
+type TagsRequest struct {
+	Tags []TagRequest `json:"tags"`
+}
+
+type TagRequest struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
 }
 
 func (mem *Member) CanMakeRequest() error {
@@ -209,6 +219,15 @@ func (list *ListResponse) DeleteMemberPermanent(id string) (bool, error) {
 
 	endpoint := fmt.Sprintf(delete_permanent_path, list.ID, id)
 	return list.api.RequestOk("POST", endpoint)
+}
+
+func (list ListResponse) AddTagsToMember(id string, body *TagsRequest) error {
+	if err := list.CanMakeRequest(); err != nil {
+		return err
+	}
+
+	endpoint := fmt.Sprintf(single_member_tag_path, list.ID, id)
+	return list.api.Request("POST", endpoint, nil, body, nil)
 }
 
 // ------------------------------------------------------------------------------------------------
