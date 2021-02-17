@@ -25,3 +25,7 @@ func (m *Member) AddEvent(e *EventRequest) error {
 
 	return m.api.Request("POST", endpoint, nil, e, nil)
 }
+
+func (m *Member) AddSimpleEvent(name string) error {
+	return m.AddEvent(&EventRequest{Name: name})
+}
