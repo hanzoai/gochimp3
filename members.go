@@ -1,8 +1,10 @@
 package gochimp3
 
 import (
+	"crypto/md5"
 	"errors"
 	"fmt"
+	"io"
 )
 
 const (
@@ -89,6 +91,27 @@ func (mem *Member) CanMakeRequest() error {
 	}
 
 	return nil
+}
+
+func (mem *Member) WithApi(api *API) *Member {
+	mem.api = api
+	return mem
+}
+
+func (mem *Member) SetIdByMail(email string) *Member {
+	h := md5.New()
+	_, err := io.WriteString(h, email)
+	if err != nil {
+		panic(err)
+	}
+	mem.ID = fmt.Sprintf("%x", h.Sum(nil))
+	return mem
+}
+
+// The Member struct returned by this should be all you need to start calling APIs for this member,
+// meaning it should pass CanMakeRequest.
+func (api *API) MemberForApiCalls(listId, email string) *Member {
+	return (&Member{ListID: listId}).WithApi(api).SetIdByMail(email)
 }
 
 type MemberStats struct {
