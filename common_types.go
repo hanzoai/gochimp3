@@ -7,12 +7,13 @@ import (
 
 // APIError is what the what the api returns on error
 type APIError struct {
-	Type     string `json:"type,omitempty"`
-	Title    string `json:"title,omitempty"`
-	Status   int    `json:"status,omitempty"`
-	Detail   string `json:"detail,omitempty"`
-	Instance string `json:"instance,omitempty"`
-	Errors   []struct {
+	Type            string `json:"type,omitempty"`
+	Title           string `json:"title,omitempty"`
+	Status          int    `json:"status,omitempty"`
+	Detail          string `json:"detail,omitempty"`
+	Instance        string `json:"instance,omitempty"`
+	ReferenceNumber string `json:"ref_no,omitempty"`
+	Errors          []struct {
 		Field   string `json:"field"`
 		Message string `json:"message"`
 	} `json:"errors,omitempty"`
