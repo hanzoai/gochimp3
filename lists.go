@@ -507,8 +507,8 @@ type BatchSubscribeMembersError struct {
 type BatchSubscribeMembersResponse struct {
 	withLinks
 
-	NewMembers     []ListOfMembers              `json:"new_members"`
-	UpdatedMembers []ListOfMembers              `json:"updated_members"`
+	NewMembers     []Member                     `json:"new_members"`
+	UpdatedMembers []Member                     `json:"updated_members"`
 	ErrorMessages  []BatchSubscribeMembersError `json:"errors"`
 	TotalCreated   int                          `json:"total_created"`
 	TotalUpdated   int                          `json:"total_updated"`
