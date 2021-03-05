@@ -501,7 +501,8 @@ func (interestCategory *InterestCategory) CreateInterest(body *InterestRequest) 
 // ------------------------------------------------------------------------------------------------
 type BatchSubscribeMembersError struct {
 	EmailAddress string `json:"email_address"`
-	ErrorMessage string ` json:"error"`
+	ErrorMessage string `json:"error"`
+	ErrorCode    string `json:"error_code"`
 }
 
 type BatchSubscribeMembersResponse struct {
