@@ -644,3 +644,14 @@ func (list *ListResponse) CreateMergeField(body *MergeFieldRequest) (*MergeField
 
 	return response, list.api.Request("POST", endpoint, nil, body, response)
 }
+
+func (list *ListResponse) DeleteMergeField(params *MergeFieldParams) (bool, error) {
+	if err := list.CanMakeRequest(); err != nil {
+		return false, err
+	}
+
+	endpoint := fmt.Sprintf(merge_field_path, list.ID, params.MergeID)
+
+	return list.api.RequestOk("DELETE", endpoint)
+
+}
