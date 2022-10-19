@@ -507,7 +507,7 @@ type BatchSubscribeMembersParams struct {
 
 func (b *BatchSubscribeMembersParams) Params() map[string]string {
 	params := make(map[string]string)
-	params["skip_merge_validation"] = strconv.FormatBool(b.SkipDuplicateCheck)
+	params["skip_merge_validation"] = strconv.FormatBool(b.SkipMergeValidation)
 	params["skip_duplicate_check"] = strconv.FormatBool(b.SkipDuplicateCheck)
 	return params
 }
