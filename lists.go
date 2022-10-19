@@ -3,6 +3,7 @@ package gochimp3
 import (
 	"errors"
 	"fmt"
+	"strconv"
 )
 
 const (
@@ -506,8 +507,8 @@ type BatchSubscribeMembersParams struct {
 
 func (b *BatchSubscribeMembersParams) Params() map[string]string {
 	params := make(map[string]string)
-	params["skip_merge_validation"] = fmt.Sprintf("%s", b.SkipMergeValidation)
-	params["skip_duplicate_check"] = fmt.Sprintf("%s", b.SkipDuplicateCheck)
+	params["skip_merge_validation"] = strconv.FormatBool(b.SkipDuplicateCheck)
+	params["skip_duplicate_check"] = strconv.FormatBool(b.SkipDuplicateCheck)
 	return params
 }
 
