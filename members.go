@@ -241,9 +241,9 @@ func (list *ListResponse) DeleteMemberPermanent(id string) (bool, error) {
 type ListOfMemberActivity struct {
 	baseList
 
-	EmailID  string     `json:"email_id"`
-	ListID   string     `json:"list_id"`
-	Activity []Activity `json:"activity"`
+	EmailID  string           `json:"email_id"`
+	ListID   string           `json:"list_id"`
+	Activity []MemberActivity `json:"activity"`
 }
 
 type MemberActivity struct {
