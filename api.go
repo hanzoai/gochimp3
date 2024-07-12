@@ -11,24 +11,20 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"reflect"
-	"regexp"
 	"time"
 )
 
-// URIFormat defines the endpoint for a single app
-const URIFormat string = "%s.api.mailchimp.com"
+const URI string = "server.api.mailchimp.com"
 
 // Version the latest API version
 const Version string = "/3.0"
 
-// DatacenterRegex defines which datacenter to hit
-var DatacenterRegex = regexp.MustCompile("[^-]\\w+$")
-
 // API represents the origin of the API
 type API struct {
-	Key       string
-	Timeout   time.Duration
-	Transport http.RoundTripper
+	Key         string
+	AccessToken string
+	Timeout     time.Duration
+	Transport   http.RoundTripper
 
 	User  string
 	Debug bool
@@ -36,17 +32,18 @@ type API struct {
 	endpoint string
 }
 
-// New creates a API
-func New(apiKey string) *API {
+// New creates an API
+func New(apiKey, accessToken string) *API {
 	u := url.URL{}
 	u.Scheme = "https"
-	u.Host = fmt.Sprintf(URIFormat, DatacenterRegex.FindString(apiKey))
+	u.Host = URI
 	u.Path = Version
 
 	return &API{
-		User:     "gochimp3",
-		Key:      apiKey,
-		endpoint: u.String(),
+		User:        "user",
+		Key:         apiKey,
+		AccessToken: accessToken,
+		endpoint:    u.String(),
 	}
 }
 
@@ -82,7 +79,16 @@ func (api *API) Request(method, path string, params QueryParams, body, response 
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth(api.User, api.Key)
+
+	// Basic Authentication
+	if api.Key != "" {
+		req.SetBasicAuth(api.User, api.Key)
+	}
+
+	// OAuth Authentication
+	if api.AccessToken != "" {
+		req.Header.Add("Authorization", "Bearer "+api.AccessToken)
+	}
 
 	if params != nil && !reflect.ValueOf(params).IsNil() {
 		queryParams := req.URL.Query()
@@ -92,7 +98,7 @@ func (api *API) Request(method, path string, params QueryParams, body, response 
 			}
 		}
 		req.URL.RawQuery = queryParams.Encode()
-		
+
 		if api.Debug {
 			log.Printf("Adding query params: %q\n", req.URL.Query())
 		}
