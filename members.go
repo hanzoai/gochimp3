@@ -31,20 +31,21 @@ type ListOfMembers struct {
 }
 
 type MemberResponse struct {
-	EmailAddress    string                 `json:"email_address"`
-	EmailType       string                 `json:"email_type,omitempty"`
-	Status          string                 `json:"status"`
-	StatusIfNew     string                 `json:"status_if_new,omitempty"`
-	MergeFields     map[string]interface{} `json:"merge_fields,omitempty"`
-	Interests       map[string]bool        `json:"interests,omitempty"`
-	Language        string                 `json:"language"`
-	VIP             bool                   `json:"vip"`
-	Location        *MemberLocation        `json:"location,omitempty"`
-	IPOpt           string                 `json:"ip_opt,omitempty"`
-	IPSignup        string                 `json:"ip_signup,omitempty"`
-	Tags            []MemberTag            `json:"tags,omitempty"`
-	TimestampSignup string                 `json:"timestamp_signup,omitempty"`
-	TimestampOpt    string                 `json:"timestamp_opt,omitempty"`
+	EmailAddress         string                 `json:"email_address"`
+	EmailType            string                 `json:"email_type,omitempty"`
+	Status               string                 `json:"status"`
+	StatusIfNew          string                 `json:"status_if_new,omitempty"`
+	MergeFields          map[string]interface{} `json:"merge_fields,omitempty"`
+	Interests            map[string]bool        `json:"interests,omitempty"`
+	Language             string                 `json:"language"`
+	VIP                  bool                   `json:"vip"`
+	Location             *MemberLocation        `json:"location,omitempty"`
+	MarketingPermissions *MarketingPermissions  `json:"marketing_permissions,omitempty"`
+	IPOpt                string                 `json:"ip_opt,omitempty"`
+	IPSignup             string                 `json:"ip_signup,omitempty"`
+	Tags                 []MemberTag            `json:"tags,omitempty"`
+	TimestampSignup      string                 `json:"timestamp_signup,omitempty"`
+	TimestampOpt         string                 `json:"timestamp_opt,omitempty"`
 }
 
 type MemberRequest struct {
