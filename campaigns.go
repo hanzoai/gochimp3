@@ -72,11 +72,11 @@ type CampaignCreationRecipients struct {
 }
 
 type CampaignCreationSegmentOptions struct {
-	SavedSegmentId int `json:"saved_segment_id"`
-	Match      string               `json:"match"`		// one of CONDITION_MATCH_*
+	SavedSegmentId int `json:"saved_segment_id,omitempty"`
+	Match      string               `json:"match,omitempty"`		// one of CONDITION_MATCH_*
 
 	// this accepts various payloads. See http://developer.mailchimp.com/documentation/mailchimp/reference/campaigns/#create-post_campaigns
-	Conditions interface{} `json:"conditions"`
+	Conditions interface{} `json:"conditions,omitempty"`
 }
 
 type InterestsCondition struct {
