@@ -545,6 +545,15 @@ type MergeFieldsParams struct {
 	Required bool   `json:"required"`
 }
 
+func (p MergeFieldsParams) Params() map[string]string {
+	m := p.ExtendedQueryParams.Params()
+	m["type"] = p.Type
+	if p.Required {
+		m["required"] = "true"
+	}
+	return m
+}
+
 type MergeFieldParams struct {
 	BasicQueryParams
 
