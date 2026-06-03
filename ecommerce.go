@@ -500,7 +500,7 @@ func (store *Store) GetProduct(id string, params *BasicQueryParams) (*Product, e
 	res.api = store.api
 	res.StoreID = store.ID
 
-	endpoint := fmt.Sprintf(cart_path, store.ID, id)
+	endpoint := fmt.Sprintf(product_path, store.ID, id)
 	err := store.api.Request("GET", endpoint, params, nil, res)
 	if err != nil {
 		return nil, err
