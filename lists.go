@@ -3,6 +3,7 @@ package gochimp3
 import (
 	"errors"
 	"fmt"
+	"strconv"
 )
 
 const (
@@ -499,6 +500,18 @@ func (interestCategory *InterestCategory) CreateInterest(body *InterestRequest) 
 // ------------------------------------------------------------------------------------------------
 // Batch subscribe list members
 // ------------------------------------------------------------------------------------------------
+type BatchSubscribeMembersParams struct {
+	SkipMergeValidation bool `json:"skip_merge_validation"`
+	SkipDuplicateCheck  bool `json:"skip_duplicate_check"`
+}
+
+func (b *BatchSubscribeMembersParams) Params() map[string]string {
+	params := make(map[string]string)
+	params["skip_merge_validation"] = strconv.FormatBool(b.SkipMergeValidation)
+	params["skip_duplicate_check"] = strconv.FormatBool(b.SkipDuplicateCheck)
+	return params
+}
+
 type BatchSubscribeMembersError struct {
 	EmailAddress string `json:"email_address"`
 	ErrorMessage string `json:"error"`
@@ -523,7 +536,7 @@ type BatchSubscribeMembersRequest struct {
 	UpdateExisting bool            `json:"update_existing"`
 }
 
-func (list *ListResponse) BatchSubscribeMembers(body *BatchSubscribeMembersRequest) (*BatchSubscribeMembersResponse, error) {
+func (list *ListResponse) BatchSubscribeMembers(body *BatchSubscribeMembersRequest, params *BatchSubscribeMembersParams) (*BatchSubscribeMembersResponse, error) {
 	if err := list.CanMakeRequest(); err != nil {
 		return nil, err
 	}
@@ -531,7 +544,7 @@ func (list *ListResponse) BatchSubscribeMembers(body *BatchSubscribeMembersReque
 	endpoint := fmt.Sprintf(lists_batch_subscribe_members, list.ID)
 	response := new(BatchSubscribeMembersResponse)
 
-	return response, list.api.Request("POST", endpoint, nil, body, response)
+	return response, list.api.Request("POST", endpoint, params, body, response)
 }
 
 // ------------------------------------------------------------------------------------------------
