@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/hero.svg" alt="gochimp3" width="880"></p>
+
 # gochimp3
 [![GoDoc][godoc-img]][godoc-url] [![Build Status][travis-img]][travis-url] [![Gitter chat][gitter-img]][gitter-url]
 
