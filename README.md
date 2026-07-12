@@ -10,7 +10,7 @@ Golang client for [MailChimp API 3.0](http://developer.mailchimp.com/documentati
 Install with `go get`:
 
 ```bash
-$ go get github.com/Elandiro/gochimp3
+$ go get github.com/hanzoai/gochimp3
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Elandiro/gochimp3"
+	"github.com/hanzoai/gochimp3"
 )
 
 const (
