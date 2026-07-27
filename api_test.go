@@ -2,7 +2,6 @@ package gochimp3
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -62,7 +61,7 @@ func TestGoodGet(t *testing.T) {
 
 		// return something
 		data, _ := json.Marshal(expected)
-		fmt.Fprintf(w, string(data))
+		w.Write(data)
 	}
 
 	api := testAPI()
@@ -97,7 +96,7 @@ func TestGetWithParams(t *testing.T) {
 			}
 		}
 		data, _ := json.Marshal(expected)
-		fmt.Fprintf(w, string(data))
+		w.Write(data)
 	}
 
 	api := testAPI()
